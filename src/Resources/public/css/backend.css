@@ -1,0 +1,87 @@
+/*
+ * Trigger Framework Bundle for Contao Open Source CMS
+ *
+ * @copyright  Copyright (c) 2018, eBlick Medienberatung
+ * @license    LGPL-3.0+
+ * @link       https://github.com/eBlick/contao-trigger
+ *
+ * @author     Moritz Vondano
+ */
+
+#tl_navigation .tl_level_1_group .group-automation {
+    background: url(../img/automation.svg) no-repeat 4px 1px;
+    background-size: 15px 15px;
+}
+
+.w25 {
+    width: calc(25% - 30px);
+    float: left;
+    height: 80px;
+    min-width: 100px;
+}
+
+.w16 {
+    width: calc(16.66% - 31px);
+    float: left;
+    height: 80px;
+    min-width: 100px;
+}
+
+.wizard.w25 .tl_text, .wizard.w25 .tl_select,
+.wizard.w16 .tl_text, .wizard.w16 .tl_select {
+    max-width: calc(100% - 24px);
+}
+
+.trigger-error {
+    color: #cc3333;
+}
+
+.trigger-error span {
+    display: block;
+    background-color: #ffeded;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.trigger-list .title {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.trigger-list .icon {
+    float: left;
+    width: 25px;
+    height: 25px;
+    margin-right: 6px;
+    background-size: 100%;
+}
+
+.trigger-list.trigger-state-paused .icon {
+    background-image: url(../img/paused.svg);
+}
+
+.trigger-list.trigger-state-waiting .icon {
+    background-image: url(../img/waiting.svg);
+}
+
+.trigger-list.trigger-state-running .icon {
+    background-image: url(../img/running.svg);
+}
+
+.trigger-list.trigger-state-error .icon {
+    background-image: url(../img/error.svg);
+}
+
+.trigger-list.trigger-state-error .title {
+    color: #cc3333;
+}
+
+.trigger-list .type {
+    margin-bottom: 4px;
+}
+
+.trigger-list .type span {
+    color: #999;
+}

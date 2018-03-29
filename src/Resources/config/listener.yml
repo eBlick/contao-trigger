@@ -1,0 +1,42 @@
+services:
+  _instanceof:
+    Contao\CoreBundle\Framework\FrameworkAwareInterface:
+      calls:
+        - ['setFramework', ['@contao.framework']]
+
+    Symfony\Component\DependencyInjection\ContainerAwareInterface:
+      calls:
+        - ['setContainer', ['@service_container']]
+
+  # trigger execution
+  eblick_contao_trigger.listener.trigger:
+    class: 'EBlick\ContaoTrigger\EventListener\TriggerListener'
+    arguments:
+    - '@eblick_contao_trigger.component.component_manager'
+    - '@database_connection'
+    - '@logger'
+    - '@eblick_contao_trigger.execution.context_factory'
+    - '@request_stack'
+
+  # data container
+  eblick_contao_trigger.listener.datacontainer.trigger:
+    class: 'EBlick\ContaoTrigger\EventListener\DataContainer\Trigger'
+    arguments:
+    - '@eblick_contao_trigger.component.component_manager'
+    - '@database_connection'
+    - '@eblick_contao_trigger.listener.trigger'
+
+  eblick_contao_trigger.listener.datacontainer.trigger_log:
+    class: 'EBlick\ContaoTrigger\EventListener\DataContainer\ExecutionLog'
+
+  eblick_contao_trigger.listener.datacontainer.table_condition:
+    class: 'EBlick\ContaoTrigger\EventListener\DataContainer\TableCondition'
+    arguments:
+    - '@database_connection'
+    - '@eblick_contao_trigger.execution.row_data_compiler'
+
+  eblick_contao_trigger.listener.datacontainer.notification_action:
+    class: 'EBlick\ContaoTrigger\EventListener\DataContainer\NotificationAction'
+    arguments:
+    - '@eblick_contao_trigger.component.component_manager'
+    - '@database_connection'

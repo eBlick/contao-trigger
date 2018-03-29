@@ -1,0 +1,47 @@
+{
+  "name": "eblick/contao-trigger",
+  "type": "contao-bundle",
+  "description": "Time and condition based trigger framework for notifications and other things inside Contao Open Source CMS",
+  "keywords": [
+    "contao",
+    "trigger",
+    "time",
+    "table",
+    "automation",
+    "notifications"
+  ],
+  "license": "LGPL-3.0",
+  "authors": [
+    {
+      "name": "eBlick Medienberatung",
+      "homepage": "https://eblick-medienberatung.de"
+    },
+    {
+      "name": "Moritz Vondano",
+      "homepage": "https://github.com/m-vo",
+      "role": "developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "contao/core-bundle": "^4.4.0",
+    "symfony/expression-language": "^3.0|^4.0",
+    "symfony/stopwatch": "^3.0|^4.0"
+  },
+  "require-dev": {
+    "contao/manager-plugin": "^2.0",
+    "terminal42/notification_center": "^1.4",
+    "phpunit/phpunit": "^5.7"
+  },
+  "suggest": {
+    "terminal42/notification_center": "^1.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "EBlick\\ContaoTrigger\\": "src/"
+    }
+  },
+  "extra": {
+    "contao-manager-plugin": "EBlick\\ContaoTrigger\\ContaoManager\\Plugin"
+  }
+}
