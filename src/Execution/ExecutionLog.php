@@ -57,11 +57,11 @@ class ExecutionLog
      * @param int    $triggerId
      * @param int    $originId
      * @param string $origin
+     * @param bool   $simulated
      *
-     * @throws \InvalidArgumentException
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function addLog(int $triggerId, int $originId, string $origin): void
+    public function addLog(int $triggerId, int $originId, string $origin, bool $simulated): void
     {
         if (!$origin) {
             throw new \InvalidArgumentException(
@@ -74,8 +74,8 @@ class ExecutionLog
 
         $this->database
             ->executeQuery(
-                'INSERT INTO tl_eblick_trigger_log SET pid=?, tstamp=?, originId=?, origin=?',
-                [$triggerId, time(), $originId, $origin]
+                'INSERT INTO tl_eblick_trigger_log SET pid=?, tstamp=?, originId=?, origin=?, simulated=?',
+                [$triggerId, time(), $originId, $origin, $simulated]
             );
     }
 }

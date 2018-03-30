@@ -67,25 +67,38 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger'] =
                 ],
                 'operations'        =>
                     [
-                        'show'   =>
+                        'show'     =>
                             [
                                 'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['show'],
                                 'href'  => 'act=show',
                                 'icon'  => 'show.svg'
                             ],
-                        'edit'   =>
+                        'edit'     =>
                             [
                                 'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['edit'],
                                 'href'  => 'act=edit',
                                 'icon'  => 'edit.svg'
                             ],
-                        'log'    =>
+                        'log'      =>
                             [
                                 'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['log'],
                                 'href'  => 'table=tl_eblick_trigger_log',
                                 'icon'  => 'bundles/eblickcontaotrigger/img/log.svg'
                             ],
-                        'reset'  =>
+                        'simulate' =>
+                            [
+                                'label'           => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['simulate'],
+                                'href'            => 'key=simulate',
+                                'icon'            => 'bundles/eblickcontaotrigger/img/simulate.svg',
+                                'button_callback' => [
+                                    'eblick_contao_trigger.listener.datacontainer.trigger',
+                                    'onShowSimulateButton'
+                                ],
+                                'attributes'      => 'onclick="if(!confirm(\''
+                                                     . $GLOBALS['TL_LANG']['tl_eblick_trigger']['simulateConfirm']
+                                                     . '\'))return false;Backend.getScrollOffset()"'
+                            ],
+                        'reset'    =>
                             [
                                 'label'      => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['reset'],
                                 'href'       => 'key=reset',
@@ -94,7 +107,7 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger'] =
                                                 . $GLOBALS['TL_LANG']['tl_eblick_trigger']['resetConfirm']
                                                 . '\'))return false;Backend.getScrollOffset()"'
                             ],
-                        'delete' =>
+                        'delete'   =>
                             [
                                 'label'      => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['delete'],
                                 'href'       => 'act=delete',

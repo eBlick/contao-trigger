@@ -19,6 +19,8 @@ $GLOBALS['TL_LANG']['tl_eblick_trigger']['edit'][1] = 'Edit trigger ID%s.';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['log'][1] = 'View log of trigger ID%s.';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['reset'][1] = 'Reset trigger ID%s.';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['resetConfirm'] = 'This will empty the log and execute all actions again if conditions are met!\nAre you sure?';
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['simulate'][1] = 'Simulate trigger ID%s (without executing actions).';
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['simulateConfirm'] = 'This will write simulated trigger log entries for all conditions that are satisfied by now.\nAre you sure?';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['delete'][1] = 'Delete trigger ID%s.';
 
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['meta_legend'] = 'Meta';

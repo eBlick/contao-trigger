@@ -23,6 +23,7 @@ array_insert(
             'eblick_trigger' => [
                 'tables'  => ['tl_eblick_trigger', 'tl_eblick_trigger_log'],
                 'execute' => ['eblick_contao_trigger.listener.datacontainer.trigger', 'onExecute'],
+                'simulate'   => ['eblick_contao_trigger.listener.datacontainer.trigger', 'onSimulate'],
                 'reset'   => ['eblick_contao_trigger.listener.datacontainer.trigger', 'onReset']
             ]
         )

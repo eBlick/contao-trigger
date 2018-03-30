@@ -18,3 +18,4 @@ $GLOBALS['TL_LANG']['tl_eblick_trigger_log']['deleteConfirm'] = 'This will trigg
 
 $GLOBALS['TL_LANG']['tl_eblick_trigger_log']['origin'] = ['Data Origin'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger_log']['originId'] = ['Data Origin Entity ID'];
+$GLOBALS['TL_LANG']['tl_eblick_trigger_log']['simulated'] = ['Simulated'];

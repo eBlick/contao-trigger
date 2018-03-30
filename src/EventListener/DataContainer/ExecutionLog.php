@@ -23,11 +23,16 @@ class ExecutionLog
      */
     public function onGenerateLabel(array $row): string
     {
+        $simulated = $row['simulated'] ?
+            sprintf(' &nbsp;<span class="trigger-simulated">[%s]</span>',
+                    $GLOBALS['TL_LANG']['tl_eblick_trigger_log']['simulated'][0]) : '';
+
         return sprintf(
-            '%s &nbsp;(\'%s\' . \'%s\')',
-            \Date::parse(\Config::get('datimFormat'),$row['tstamp']),
+            '%s &nbsp;(\'%s\' . \'%s\')%s',
+            \Date::parse(\Config::get('datimFormat'), $row['tstamp']),
             $row['origin'],
-            $row['originId']
+            $row['originId'],
+            $simulated
         );
     }
 }

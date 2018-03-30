@@ -85,9 +85,9 @@ class ExecutionContextTest extends \PHPUnit_Framework_TestCase
         $log = $this->createMock(ExecutionLog::class);
         $log->expects($this->once())
             ->method('addLog')
-            ->with(5, 61, 'tl_someTable');
+            ->with(5, 61, 'tl_someTable', false);
 
         $context = new ExecutionContext($parameters, 15000, $log);
-        $context->addLog(61, 'tl_someTable');
+        $context->addLog(61, 'tl_someTable', false);
     }
 }

@@ -84,13 +84,13 @@ class ExecutionContext
      *
      * @param int    $originId
      * @param string $origin
+     * @param bool   $simulated
      *
-     * @throws \InvalidArgumentException
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function addLog(int $originId, string $origin): void
+    public function addLog(int $originId, string $origin, bool $simulated): void
     {
-        $this->executionLog->addLog((int) $this->triggerParameters->id, $originId, $origin);
+        $this->executionLog->addLog((int) $this->triggerParameters->id, $originId, $origin, $simulated);
     }
 
 }

@@ -71,7 +71,7 @@ class ExecutionLogTest extends \PHPUnit_Framework_TestCase
         $log = new ExecutionLog($connection = $this->createMock(Connection::class));
 
         $this->expectException(\InvalidArgumentException::class);
-        $log->addLog(12, 5, '');
+        $log->addLog(12, 5, '', false);
     }
 
     public function testAddLogWithOrigin(): void
@@ -80,11 +80,11 @@ class ExecutionLogTest extends \PHPUnit_Framework_TestCase
         $connection->expects($this->once())
             ->method('executeQuery')
             ->with(
-                'INSERT INTO tl_eblick_trigger_log SET pid=?, tstamp=?, originId=?, origin=?',
+                'INSERT INTO tl_eblick_trigger_log SET pid=?, tstamp=?, originId=?, origin=?, simulated=?',
                 $this->anything()
             );
 
         $log = new ExecutionLog($connection);
-        $log->addLog(12, 5, 'tl_someTable');
+        $log->addLog(12, 5, 'tl_someTable', false);
     }
 }

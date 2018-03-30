@@ -115,15 +115,36 @@ class TriggerListener implements ContainerAwareInterface
         }
     }
 
+
+    /**
+     * Simulate a trigger and write logs without executing actions.
+     *
+     * @param $triggerId
+     *
+     * @throws \Exception
+     */
+    public function onSimulate($triggerId) : void
+    {
+        $trigger = $this->database
+            ->executeQuery(
+                'SELECT * FROM tl_eblick_trigger WHERE id = ?',
+                [$triggerId]
+            )
+            ->fetch(\PDO::FETCH_OBJ);
+
+        $this->execute($trigger, true);
+    }
+
     /**
      * Execute a single trigger.
      *
      * @param \stdClass $trigger
      *
-     * @throws \InvalidArgumentException
+     * @param bool      $simulated
+     *
      * @throws \Doctrine\DBAL\DBALException
      */
-    private function execute(\stdClass $trigger): void
+    private function execute(\stdClass $trigger, $simulated = false): void
     {
         $condition = $this->componentManager->getCondition($trigger->condition_type);
         $action    = $this->componentManager->getAction($trigger->action_type);
@@ -142,10 +163,10 @@ class TriggerListener implements ContainerAwareInterface
 
         $fireCallback =
             function (array $data = [], int $originId = 0, string $origin = 'tl_eblick_trigger')
-            use ($action, $executionContext, $dataPrototype) {
-                // fire action
-                if ($action->fire($executionContext, $this->filterData($dataPrototype, $data))) {
-                    $executionContext->addLog($originId, $origin);
+            use ($simulated, $action, $executionContext, $dataPrototype) {
+                // fire action or skip if simulating
+                if ($simulated || $action->fire($executionContext, $this->filterData($dataPrototype, $data))) {
+                    $executionContext->addLog($originId, $origin, $simulated);
                 }
             };
 

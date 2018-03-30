@@ -82,6 +82,6 @@
     margin-bottom: 4px;
 }
 
-.trigger-list .type span {
+.trigger-list .type span, .trigger-simulated {
     color: #999;
 }

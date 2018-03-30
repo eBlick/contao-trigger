@@ -19,6 +19,8 @@ $GLOBALS['TL_LANG']['tl_eblick_trigger']['edit'][1] = 'Trigger ID%s bearbeiten.'
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['log'][1] = 'Trigger-Log für ID%s anzeigen.';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['reset'][1] = 'Trigger-Log für Trigger ID%s zurücksetzen.';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['resetConfirm'] = 'Dies wird den Log zurücksetzen und alle Aktionen erneut auslösen, wenn die Bedingungen erfüllt sind!\nSind Sie sicher?';
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['simulate'][1] = 'Abarbeitung von Trigger ID%s simulieren (ohne Aktionen auszuführen).';
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['simulateConfirm'] = 'Dies wird simulierte Log-Einträge für alle derzeit zutreffenden Bedingungen erzeugen.\nSind Sie sicher?';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['delete'][1] = 'Trigger ID%s löschen.';
 
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['meta_legend'] = 'Metadaten';

@@ -75,29 +75,39 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger_log'] =
         'fields' =>
             [
                 // contao
-                'id'       =>
+                'id'        =>
                     [
                         'sql' => 'int(10) unsigned NOT NULL auto_increment'
                     ],
-                'pid'      =>
+                'pid'       =>
                     [
                         'foreignKey' => 'tl_eblick_trigger.title',
                         'sql'        => "int(10) unsigned NOT NULL default '0'",
                         'relation'   => ['type' => 'belongsTo', 'load' => 'lazy']
                     ],
-                'tstamp'   =>
+                'tstamp'    =>
                     [
                         'sql' => "int(10) unsigned NOT NULL default '0'"
                     ],
-                'origin'   =>
+                'origin'    =>
                     [
                         'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger_log']['origin'],
                         'sql'   => "varchar(64) NOT NULL default 'tl_eblick_trigger'"
                     ],
-                'originId' =>
+                'originId'  =>
                     [
                         'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger_log']['originId'],
                         'sql'   => "int(10) unsigned NOT NULL default '0'"
-                    ]
+                    ],
+                'simulated' =>
+                    [
+                        'label'     => &$GLOBALS['TL_LANG']['tl_eblick_trigger_log']['simulated'],
+                        'default'   => false,
+                        'inputType' => 'checkbox', // needed for details to show yes/no
+                        'eval'      => [
+                            'isBoolean' => true
+                        ],
+                        'sql'       => "char(1) NOT NULL default '0'"
+                    ],
             ]
     ];

@@ -15,12 +15,14 @@ declare(strict_types=1);
 namespace EBlick\ContaoTrigger\EventListener\DataContainer;
 
 
-
+use Contao\Backend;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\DataContainer;
+use Contao\Image;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\DataContainer\DataContainerComponentInterface;
@@ -47,8 +49,11 @@ class Trigger implements FrameworkAwareInterface
      * @param Connection       $database
      * @param TriggerListener  $triggerSystem
      */
-    public function __construct(ComponentManager $componentManager, Connection $database, TriggerListener $triggerSystem)
-    {
+    public function __construct(
+        ComponentManager $componentManager,
+        Connection $database,
+        TriggerListener $triggerSystem
+    ) {
         $this->componentManager = $componentManager;
         $this->database         = $database;
         $this->triggerSystem    = $triggerSystem;
@@ -189,6 +194,38 @@ class Trigger implements FrameworkAwareInterface
         );
     }
 
+    /**
+     * @param array  $row
+     * @param string $href
+     * @param string $label
+     * @param string $title
+     * @param string $icon
+     * @param string $attributes
+     *
+     * @return string
+     */
+    public function onShowSimulateButton(
+        array $row,
+        string $href,
+        string $label,
+        string $title,
+        string $icon,
+        string $attributes
+    ): string {
+        // only show for disabled triggers
+        if ($row['enabled']) {
+            return '';
+        }
+
+        return sprintf(
+            '<a href="%s" title="%s"%s>%s</a> ',
+            Backend::addToUrl($href . '&amp;id=' . $row['id']),
+            StringUtil::specialchars($title),
+            $attributes,
+            Image::getHtml($icon, $label)
+        );
+    }
+
 
     /**
      * @throws \Exception
@@ -196,6 +233,15 @@ class Trigger implements FrameworkAwareInterface
     public function onExecute(): void
     {
         $this->triggerSystem->onExecute();
+        $this->redirectBack();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function onSimulate(DataContainer $dc): void
+    {
+        $this->triggerSystem->onSimulate($dc->id);
         $this->redirectBack();
     }
 
