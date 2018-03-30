@@ -142,6 +142,8 @@ class TriggerListener implements ContainerAwareInterface
      *
      * @param bool      $simulated
      *
+     * @throws \EBlick\ContaoTrigger\Execution\ExecutionException
+     * @throws \InvalidArgumentException
      * @throws \Doctrine\DBAL\DBALException
      */
     private function execute(\stdClass $trigger, $simulated = false): void

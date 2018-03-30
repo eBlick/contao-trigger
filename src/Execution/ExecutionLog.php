@@ -59,6 +59,7 @@ class ExecutionLog
      * @param string $origin
      * @param bool   $simulated
      *
+     * @throws \InvalidArgumentException
      * @throws \Doctrine\DBAL\DBALException
      */
     public function addLog(int $triggerId, int $originId, string $origin, bool $simulated): void

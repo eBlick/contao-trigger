@@ -49,6 +49,10 @@ $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_overwriteExecutionTime'] = [
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_executionTime'] = ['Uhrzeit', 'z.B. 07:00, wenn die Auslösung unabhängig von der Uhrzeit des Zeitfeldes immer morgens geschehen soll.'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_expression'] = ['Custom Expression', 'Optionale Bedingung in <a href="https://symfony.com/doc/current/components/expression_language/syntax.html" style="color: #148ace;" target="_blank">Symfony Expression Language</a>. Die Tabellen-Spalten sind als Variablen verfügbar, z.B.: \'sum >= 4 and published\''];
 
+// time condition
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['condition']['time'] = ['Zeitpunkt'];
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_time_executionTime'] = ['Datum/Uhrzeit', 'Aktion wird ausgelöst, sobald der Zeitpunkt eingetreten ist.'];
+
 // notification action
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action']['notification'] = ['Benachrichtigung via Notification Center'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action_notification_entity'] = ['Benachrichtigung', 'Wählen Sie eine zuvor angelegte Benachrichtigung des Typs `Trigger Benachrichtigung` aus dem Notification Center.'];

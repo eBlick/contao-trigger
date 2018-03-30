@@ -74,9 +74,21 @@ class ExecutionContext
      * @return array
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getLog(string $origin = null): array
+    public function getLog(string $origin = 'tl_eblick_trigger'): array
     {
         return $this->executionLog->getLog((int) $this->triggerParameters->id, $origin);
+    }
+
+    /**
+     * Returns an array of log entries associated with this trigger with keys being the origin ids and values a
+     * parameter object of all columns.
+     *
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getAllLogs(): array
+    {
+        return $this->executionLog->getLog((int) $this->triggerParameters->id, null);
     }
 
     /**
@@ -86,9 +98,10 @@ class ExecutionContext
      * @param string $origin
      * @param bool   $simulated
      *
+     * @throws \InvalidArgumentException
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function addLog(int $originId, string $origin, bool $simulated): void
+    public function addLog(int $originId, string $origin = 'tl_eblick_trigger', bool $simulated = false): void
     {
         $this->executionLog->addLog((int) $this->triggerParameters->id, $originId, $origin, $simulated);
     }

@@ -237,6 +237,8 @@ class Trigger implements FrameworkAwareInterface
     }
 
     /**
+     * @param DataContainer $dc
+     *
      * @throws \Exception
      */
     public function onSimulate(DataContainer $dc): void

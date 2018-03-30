@@ -49,6 +49,11 @@ $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_overwriteExecutionTime'] = [
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_executionTime'] = ['Time', 'Value will replace the calculated offset\'s time.'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_expression'] = ['Custom Expression', 'Optional condition in <a href="https://symfony.com/doc/current/components/expression_language/syntax.html" style="color: #148ace;" target="_blank">Symfony Expression Language</a>. The database columns are available as variables, e.g.: \'sum >= 4 and published\''];
 
+// time condition
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['condition']['time'] = ['Point in Time'];
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_time_executionTime'] = ['Date/Time', 'Action will be executed, when this moment in time is reached.'];
+
+
 // notification action
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action']['notification'] = ['Notification'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action_notification_entity'] = ['Notification', 'Choose a trigger notification from the notification center.'];

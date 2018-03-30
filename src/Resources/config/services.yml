@@ -34,6 +34,13 @@ services:
     tags:
       - { name: eblick_contao_trigger.condition, alias: table }
 
+  eblick_contao_trigger.component.time_condition:
+    class: EBlick\ContaoTrigger\Component\Condition\TimeCondition
+    arguments:
+     - '@database_connection'
+    tags:
+      - { name: eblick_contao_trigger.condition, alias: time }
+
   eblick_contao_trigger.component.notification_action:
     class: EBlick\ContaoTrigger\Component\Action\NotificationAction
     tags:
