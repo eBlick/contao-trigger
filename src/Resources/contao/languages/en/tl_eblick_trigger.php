@@ -29,7 +29,7 @@ $GLOBALS['TL_LANG']['tl_eblick_trigger']['condition_type'] = ['Condition Type'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action_legend'] = 'Action';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action_type'] = ['Action Type'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['system_legend'] = 'System Settings';
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['enabled'] = ['Enable this trigger'];
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['enabled'] = ['Enable this trigger', 'Start execution as soon as your ensured all settings are correct.'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['lastRun'] = ['Last Run'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['lastDuration'] = ['Last Duration [ms]'];
 
@@ -38,14 +38,14 @@ $GLOBALS['TL_LANG']['tl_eblick_trigger']['condition']['table'] = ['Table Records
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_src'] = ['Source Table', 'Actions are fired at most once for each of the table\'s rows.'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_timed'] = ['Add time constraint'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_timeColumn'] = ['Time Field', 'Select the database column that holds the time value.'];
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_timeOffset'] = ['Offset', 'Optional offset like 5 or -30.'];
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_timeOffset'] = ['Offset', 'Offset like 5 or -30.'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_timeOffsetUnit'] = ['Unit'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_timeOffsetUnit']['MINUTE'] = ['minutes'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_timeOffsetUnit']['HOUR'] = ['hours'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_timeOffsetUnit']['DAY'] = ['days'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_overwriteExecutionTime'] = ['Overwrite execution time'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_executionTime'] = ['Time', 'Value will replace the calculated offset\'s time.'];
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_expression'] = ['Custom Expression', 'Optional condition in Symfony Expression Language. The database columns are available as variables, e.g.: sum >= 4 && published'];
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_expression'] = ['Custom Expression', 'Optional condition in <a href="https://symfony.com/doc/current/components/expression_language/syntax.html" style="color: #148ace;" target="_blank">Symfony Expression Language</a>. The database columns are available as variables, e.g.: \'sum >= 4 and published\''];
 
 // notification action
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action']['notification'] = ['Notification'];
