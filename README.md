@@ -24,6 +24,9 @@ By default the following components are available:
       using the latter, the execution time can be overwritten (e.g. 3
       days in advance, but at 6pm).
 
+    - **Point in Time**: Executes an action as soon as a given point in
+      time is reached. This allows basic scheduling.
+
  - **Actions**
     - **Notification Action**: Allows to send a custom notification via
       `terminal42\notification-center` (must be installed individually).
