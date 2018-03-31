@@ -46,7 +46,7 @@ class RowDataCompiler
                 /** @noinspection PhpUnusedParameterInspection */
                 $rowData
             ) use ($compiledExpression) : bool {
-                return eval('return ' . $compiledExpression . ';');
+                return true === @eval('return ' . $compiledExpression . ';');
             };
 
         return $expressionCallback;
