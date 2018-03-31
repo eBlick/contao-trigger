@@ -42,6 +42,12 @@ $GLOBALS['TL_HOOKS']['loadDataContainer'][] =
         'onImportDefinitions'
     ];
 
+// Add insert tag helpers
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] =
+    [
+        'eblick_contao_trigger.listener.util.insert_tags',
+        'onReplaceInsertTags'
+    ];
 
 // Cron job with fallback for the periodic command scheduler
 $GLOBALS['TL_CRON']['minutely'][] = ['eblick_contao_trigger.listener.trigger', 'onExecute'];
