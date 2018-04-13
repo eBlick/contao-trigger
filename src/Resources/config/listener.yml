@@ -42,9 +42,3 @@ services:
     arguments:
     - '@eblick_contao_trigger.component.component_manager'
     - '@database_connection'
-
-  # util
-  eblick_contao_trigger.listener.util.insert_tags:
-    class: 'EBlick\ContaoTrigger\Util\InsertTags'
-    tags:
-      - { name: 'contao.hook', hook: 'replaceInsertTags', method: 'onReplaceInsertTags'}
