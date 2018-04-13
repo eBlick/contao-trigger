@@ -34,21 +34,6 @@ if ('BE' === TL_MODE) {
     $GLOBALS['TL_CSS'][] = 'bundles/eblickcontaotrigger/css/backend.css';
 }
 
-
-// Import component definitions into trigger dca
-$GLOBALS['TL_HOOKS']['loadDataContainer'][] =
-    [
-        'eblick_contao_trigger.listener.datacontainer.trigger',
-        'onImportDefinitions'
-    ];
-
-// Add insert tag helpers
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] =
-    [
-        'eblick_contao_trigger.listener.util.insert_tags',
-        'onReplaceInsertTags'
-    ];
-
 // Cron job with fallback for the periodic command scheduler
 $GLOBALS['TL_CRON']['minutely'][] = ['eblick_contao_trigger.listener.trigger', 'onExecute'];
 

@@ -25,6 +25,8 @@ services:
     - '@eblick_contao_trigger.component.component_manager'
     - '@database_connection'
     - '@eblick_contao_trigger.listener.trigger'
+    tags:
+      - { name: 'contao.hook', hook: 'loadDataContainer', method: 'onImportDefinitions'}
 
   eblick_contao_trigger.listener.datacontainer.trigger_log:
     class: 'EBlick\ContaoTrigger\EventListener\DataContainer\ExecutionLog'
@@ -44,3 +46,5 @@ services:
   # util
   eblick_contao_trigger.listener.util.insert_tags:
     class: 'EBlick\ContaoTrigger\Util\InsertTags'
+    tags:
+      - { name: 'contao.hook', hook: 'replaceInsertTags', method: 'onReplaceInsertTags'}
