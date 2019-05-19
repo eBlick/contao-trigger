@@ -27,6 +27,7 @@ services:
     - '@eblick_contao_trigger.listener.trigger'
     tags:
       - { name: 'contao.hook', hook: 'loadDataContainer', method: 'onImportDefinitions'}
+    public: true
 
   eblick_contao_trigger.listener.datacontainer.trigger_log:
     class: 'EBlick\ContaoTrigger\EventListener\DataContainer\ExecutionLog'
@@ -36,9 +37,11 @@ services:
     arguments:
     - '@database_connection'
     - '@eblick_contao_trigger.execution.row_data_compiler'
+    public: true
 
   eblick_contao_trigger.listener.datacontainer.notification_action:
     class: 'EBlick\ContaoTrigger\EventListener\DataContainer\NotificationAction'
     arguments:
     - '@eblick_contao_trigger.component.component_manager'
     - '@database_connection'
+    public: true
