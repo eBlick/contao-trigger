@@ -31,6 +31,7 @@ services:
 
   eblick_contao_trigger.listener.datacontainer.trigger_log:
     class: 'EBlick\ContaoTrigger\EventListener\DataContainer\ExecutionLog'
+    public: true
 
   eblick_contao_trigger.listener.datacontainer.table_condition:
     class: 'EBlick\ContaoTrigger\EventListener\DataContainer\TableCondition'
