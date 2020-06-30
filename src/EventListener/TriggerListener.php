@@ -199,7 +199,7 @@ class TriggerListener implements ContainerAwareInterface
         $stopwatchEvent = $this->executionTimer->stop('trigger-' . $trigger->id);
         $this->database->executeQuery(
             'UPDATE tl_eblick_trigger SET lastRun = ?, lastDuration = ? WHERE id = ?',
-            [$executionContext->getStartTime(), $stopwatchEvent->getDuration(), $trigger->id]
+            [$executionContext->getStartTime(), (int) $stopwatchEvent->getDuration(), $trigger->id]
         );
     }
 
