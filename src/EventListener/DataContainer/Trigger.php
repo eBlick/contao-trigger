@@ -259,7 +259,7 @@ class Trigger implements FrameworkAwareInterface
             [$dc->id]
         );
         $this->database->executeQuery(
-            'UPDATE tl_eblick_trigger SET lastDuration = NULL, lastRun = NULL WHERE id =?',
+            'UPDATE tl_eblick_trigger SET lastDuration = 0, lastRun = 0 WHERE id =?',
             [$dc->id]
         );
 
