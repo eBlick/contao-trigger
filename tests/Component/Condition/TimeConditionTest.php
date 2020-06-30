@@ -19,8 +19,9 @@ use Doctrine\DBAL\Driver\Statement;
 use EBlick\ContaoTrigger\Component\Condition\TimeCondition;
 use EBlick\ContaoTrigger\DataContainer\Definition;
 use EBlick\ContaoTrigger\Execution\ExecutionContext;
+use PHPUnit\Framework\TestCase;
 
-class TimeConditionTest extends \PHPUnit_Framework_TestCase
+class TimeConditionTest extends TestCase
 {
     public function testInstantiation(): void
     {

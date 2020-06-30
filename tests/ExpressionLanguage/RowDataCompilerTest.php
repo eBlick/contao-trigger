@@ -15,9 +15,10 @@ declare(strict_types=1);
 namespace EBlick\ContaoTrigger\Test\ExpressionLanguage;
 
 use EBlick\ContaoTrigger\ExpressionLanguage\RowDataCompiler;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
-class RowDataCompilerTest extends \PHPUnit_Framework_TestCase
+class RowDataCompilerTest extends TestCase
 {
     public function testInstantiation(): void
     {

@@ -8,7 +8,7 @@
  * @author     Moritz Vondano
  */
 
-#tl_navigation .tl_level_1_group .group-automation {
+#tl_navigation .group-automation {
     background: url(../img/automation.svg) no-repeat 4px 1px;
     background-size: 15px 15px;
 }

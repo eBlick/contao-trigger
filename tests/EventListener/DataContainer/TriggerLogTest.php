@@ -15,8 +15,9 @@ declare(strict_types=1);
 namespace EBlick\ContaoTrigger\Test\EventListener\DataContainer;
 
 use EBlick\ContaoTrigger\EventListener\DataContainer\ExecutionLog;
+use PHPUnit\Framework\TestCase;
 
-class TriggerLogTest extends \PHPUnit_Framework_TestCase
+class TriggerLogTest extends TestCase
 {
     public function testInstantiation(): void
     {

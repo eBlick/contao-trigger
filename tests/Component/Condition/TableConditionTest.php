@@ -22,8 +22,9 @@ use Doctrine\DBAL\Schema\Column;
 use EBlick\ContaoTrigger\Component\Condition\TableCondition;
 use EBlick\ContaoTrigger\DataContainer\Definition;
 use EBlick\ContaoTrigger\ExpressionLanguage\RowDataCompiler;
+use PHPUnit\Framework\TestCase;
 
-class TableConditionTest extends \PHPUnit_Framework_TestCase
+class TableConditionTest extends TestCase
 {
     public function testInstantiation(): void
     {
@@ -35,10 +36,10 @@ class TableConditionTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(TableCondition::class, $obj);
     }
 
-    public function testEvaluate(): void
-    {
-        // todo
-    }
+    // todo
+//    public function testEvaluate(): void
+//    {
+//    }
 
     public function testGetDataContainerDefinition(): void
     {

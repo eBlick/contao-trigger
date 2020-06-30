@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace EBlick\ContaoTrigger\Test\Component\Action;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\TestCase\ContaoTestCase;
 use EBlick\ContaoTrigger\Component\Action\NotificationAction;
 use EBlick\ContaoTrigger\DataContainer\Definition;
 use EBlick\ContaoTrigger\Execution\ExecutionContext;
@@ -23,7 +23,7 @@ use EBlick\ContaoTrigger\Execution\ExecutionLog;
 use NotificationCenter\Model\Notification;
 
 
-class NotificationActionTest extends \PHPUnit_Framework_TestCase
+class NotificationActionTest extends ContaoTestCase
 {
     public function testInstantiation(): void
     {
@@ -33,26 +33,21 @@ class NotificationActionTest extends \PHPUnit_Framework_TestCase
 
     private function getMockedAction($preparedData, $notificationId): NotificationAction
     {
-        $notification = $this->getMockBuilder('NotificationModelDummy')->setMethods(['send'])->getMock();
+        $notification = $this->mockAdapter(['send']);
         $notification
             ->expects($this->once())
             ->method('send')
             ->with($preparedData)
             ->willReturn(true);
 
-        $notificationModel = $this->getMockBuilder('NotificationModelDummy')->setMethods(['findByPk'])->getMock();
-        $notificationModel
+        $notificationAdapter = $this->mockAdapter(['findByPk']);
+        $notificationAdapter
             ->expects($this->once())
             ->method('findByPk')
             ->with($notificationId)
             ->willReturn($notification);
 
-        $framework = $this->createMock(ContaoFrameworkInterface::class);
-        $framework
-            ->expects($this->once())
-            ->method('getAdapter')
-            ->with(Notification::class)
-            ->willReturn($notificationModel);
+        $framework = $this->mockContaoFramework([Notification::class => $notificationAdapter]);
 
         $action = new NotificationAction();
         $action->setFramework($framework);

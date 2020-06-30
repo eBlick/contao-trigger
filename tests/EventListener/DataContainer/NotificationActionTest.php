@@ -20,8 +20,9 @@ use Doctrine\DBAL\Statement;
 use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\Component\Condition\ConditionInterface;
 use EBlick\ContaoTrigger\EventListener\DataContainer\NotificationAction;
+use PHPUnit\Framework\TestCase;
 
-class NotificationActionTest extends \PHPUnit_Framework_TestCase
+class NotificationActionTest extends TestCase
 {
     public function testInstantiation(): void
     {
@@ -70,7 +71,7 @@ class NotificationActionTest extends \PHPUnit_Framework_TestCase
         $result = $action->onGetTokenList($dc);
         $part   = '##trigger_id##, ##trigger_title##, ##trigger_startTime##, ##data_testColumn1##, ##data_testColumn2##';
 
-        $this->assertContains($part, $result);
+        $this->assertStringContainsString($part, $result);
     }
 
     public function testGetNotificationChoices(): void
