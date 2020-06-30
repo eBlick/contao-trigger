@@ -207,7 +207,7 @@ class Trigger implements FrameworkAwareInterface
     public function onShowSimulateButton(
         array $row,
         string $href,
-        string $label,
+        ?string $label,
         string $title,
         string $icon,
         string $attributes
