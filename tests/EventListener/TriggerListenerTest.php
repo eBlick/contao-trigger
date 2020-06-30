@@ -19,10 +19,11 @@ use Doctrine\DBAL\Statement;
 use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\EventListener\TriggerListener;
 use EBlick\ContaoTrigger\Execution\ExecutionContextFactory;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class TriggerListenerTest extends \PHPUnit_Framework_TestCase
+class TriggerListenerTest extends TestCase
 {
     public function testInstantiation(): void
     {

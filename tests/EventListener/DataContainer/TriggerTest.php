@@ -18,8 +18,9 @@ use Doctrine\DBAL\Connection;
 use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\EventListener\DataContainer\Trigger;
 use EBlick\ContaoTrigger\EventListener\TriggerListener;
+use PHPUnit\Framework\TestCase;
 
-class TriggerTest extends \PHPUnit_Framework_TestCase
+class TriggerTest extends TestCase
 {
     public function testInstantiation(): void
     {

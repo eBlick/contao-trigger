@@ -19,8 +19,9 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Table;
 use EBlick\ContaoTrigger\EventListener\DataContainer\TableCondition;
 use EBlick\ContaoTrigger\ExpressionLanguage\RowDataCompiler;
+use PHPUnit\Framework\TestCase;
 
-class TableConditionTest extends \PHPUnit_Framework_TestCase
+class TableConditionTest extends TestCase
 {
     public function testInstantiation(): void
     {

@@ -16,11 +16,12 @@ namespace EBlick\ContaoTrigger\Test\DependencyInjection\Compiler;
 
 use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\DependencyInjection\Compiler\AddComponentsCompilerPass;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
-class AddComponentsCompilerPassTest extends \PHPUnit_Framework_TestCase
+class AddComponentsCompilerPassTest extends TestCase
 {
     public function testInstantiation(): void
     {

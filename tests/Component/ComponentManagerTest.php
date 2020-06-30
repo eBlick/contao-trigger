@@ -17,8 +17,9 @@ namespace EBlick\ContaoTrigger\Test\Component;
 use EBlick\ContaoTrigger\Component\Action\ActionInterface;
 use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\Component\Condition\ConditionInterface;
+use PHPUnit\Framework\TestCase;
 
-class ComponentManagerTest extends \PHPUnit_Framework_TestCase
+class ComponentManagerTest extends TestCase
 {
     public function testInstantiation() : void
     {

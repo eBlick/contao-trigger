@@ -19,8 +19,9 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use EBlick\ContaoTrigger\ContaoManager\Plugin;
 use EBlick\ContaoTrigger\EBlickContaoTriggerBundle;
+use PHPUnit\Framework\TestCase;
 
-class PluginTest extends \PHPUnit_Framework_TestCase
+class PluginTest extends TestCase
 {
     public function testInstantiation(): void
     {

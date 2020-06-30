@@ -17,8 +17,9 @@ namespace EBlick\ContaoTrigger\Test\Execution;
 use EBlick\ContaoTrigger\Execution\ExecutionContext;
 use EBlick\ContaoTrigger\Execution\ExecutionContextFactory;
 use EBlick\ContaoTrigger\Execution\ExecutionLog;
+use PHPUnit\Framework\TestCase;
 
-class ExecutionContextFactoryTest extends \PHPUnit_Framework_TestCase
+class ExecutionContextFactoryTest extends TestCase
 {
     public function testInstantiation(): void
     {

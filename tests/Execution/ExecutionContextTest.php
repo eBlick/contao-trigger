@@ -16,8 +16,9 @@ namespace EBlick\ContaoTrigger\Test\Execution;
 
 use EBlick\ContaoTrigger\Execution\ExecutionContext;
 use EBlick\ContaoTrigger\Execution\ExecutionLog;
+use PHPUnit\Framework\TestCase;
 
-class ExecutionContextTest extends \PHPUnit_Framework_TestCase
+class ExecutionContextTest extends TestCase
 {
     public function testInstantiationFailsWithoutId(): void
     {

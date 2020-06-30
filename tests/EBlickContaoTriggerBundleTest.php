@@ -16,9 +16,10 @@ namespace EBlick\ContaoTrigger\Test;
 
 use EBlick\ContaoTrigger\DependencyInjection\Compiler\AddComponentsCompilerPass;
 use EBlick\ContaoTrigger\EBlickContaoTriggerBundle;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class EBlickContaoTriggerBundleTest extends \PHPUnit_Framework_TestCase
+class EBlickContaoTriggerBundleTest extends TestCase
 {
     public function testInstantiation(): void
     {

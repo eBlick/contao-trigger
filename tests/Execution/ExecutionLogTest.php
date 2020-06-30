@@ -17,8 +17,9 @@ namespace EBlick\ContaoTrigger\Test\Execution;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use EBlick\ContaoTrigger\Execution\ExecutionLog;
+use PHPUnit\Framework\TestCase;
 
-class ExecutionLogTest extends \PHPUnit_Framework_TestCase
+class ExecutionLogTest extends TestCase
 {
     public function testInstantiation(): void
     {

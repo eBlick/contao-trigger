@@ -15,8 +15,9 @@ declare(strict_types=1);
 namespace EBlick\ContaoTrigger\Test\Execution;
 
 use EBlick\ContaoTrigger\Execution\ExecutionException;
+use PHPUnit\Framework\TestCase;
 
-class ExecutionExceptionTest extends \PHPUnit_Framework_TestCase
+class ExecutionExceptionTest extends TestCase
 {
     public function testInstantiation(): void
     {
