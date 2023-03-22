@@ -3,13 +3,9 @@
 declare(strict_types=1);
 
 /*
- * Trigger Framework Bundle for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2018, eBlick Medienberatung
- * @license    LGPL-3.0+
- * @link       https://github.com/eBlick/contao-trigger
- *
- * @author     Moritz Vondano
+ * @copyright eBlick Medienberatung
+ * @license   LGPL-3.0+
+ * @link      https://github.com/eBlick/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\ContaoManager;
@@ -22,10 +18,7 @@ use EBlick\ContaoTrigger\EBlickContaoTriggerBundle;
 
 class Plugin implements BundlePluginInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create(EBlickContaoTriggerBundle::class)

@@ -3,13 +3,9 @@
 declare(strict_types=1);
 
 /*
- * Trigger Framework Bundle for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2018, eBlick Medienberatung
- * @license    LGPL-3.0+
- * @link       https://github.com/eBlick/contao-trigger
- *
- * @author     Moritz Vondano
+ * @copyright eBlick Medienberatung
+ * @license   LGPL-3.0+
+ * @link      https://github.com/eBlick/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Execution;
@@ -18,65 +14,37 @@ use Doctrine\DBAL\Connection;
 
 class ExecutionLog
 {
-    /** @var Connection */
-    private $database;
-
-    /**
-     * ExecutionLog constructor.
-     *
-     * @param Connection $database
-     */
-    public function __construct(Connection $database)
+    public function __construct(private Connection $connection)
     {
-        $this->database = $database;
     }
 
-    /**
-     * @param int    $triggerId
-     * @param string $origin
-     *
-     * @return array
-     * @throws \Doctrine\DBAL\DBALException
-     */
     public function getLog(int $triggerId, string $origin = null): array
     {
-        $query  = 'SELECT originId, l.* FROM tl_eblick_trigger_log l WHERE pid=?';
+        $query = 'SELECT originId, l.* FROM tl_eblick_trigger_log l WHERE pid=?';
         $params = [$triggerId];
 
         if (null !== $origin) {
-            $query    .= ' AND origin =?';
+            $query .= ' AND origin =?';
             $params[] = $origin;
         }
 
-        return $this->database
+        return $this->connection
             ->executeQuery($query, $params)
-            ->fetchAll(\PDO::FETCH_GROUP | \PDO::FETCH_OBJ);
+            ->fetchAllAssociative()
+        ;
     }
 
-    /**
-     * @param int    $triggerId
-     * @param int    $originId
-     * @param string $origin
-     * @param bool   $simulated
-     *
-     * @throws \InvalidArgumentException
-     * @throws \Doctrine\DBAL\DBALException
-     */
     public function addLog(int $triggerId, int $originId, string $origin, bool $simulated): void
     {
         if (!$origin) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Origin can\'t be empty in trigger %s!',
-                    $triggerId
-                )
-            );
+            throw new \InvalidArgumentException(sprintf('Origin can\'t be empty in trigger %s!', $triggerId));
         }
 
-        $this->database
+        $this->connection
             ->executeQuery(
                 'INSERT INTO tl_eblick_trigger_log SET pid=?, tstamp=?, originId=?, origin=?, simulated=?',
                 [$triggerId, time(), $originId, $origin, $simulated]
-            );
+            )
+        ;
     }
 }

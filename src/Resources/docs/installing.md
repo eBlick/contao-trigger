@@ -41,7 +41,7 @@ class AppKernel extends Kernel
 ```
 
 
-#### Step 3: Setup a cron job (recommended)
+#### Step 3: Set up a cron job (recommended)
 
 The system gets triggered by the internal 'minutely cron job'. Disable
 Contao's 'poor man cronjob' (periodic command scheduler) to make sure

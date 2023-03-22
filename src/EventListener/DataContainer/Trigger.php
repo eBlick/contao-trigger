@@ -2,25 +2,14 @@
 
 declare(strict_types=1);
 
-/*
- * Trigger Framework Bundle for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2018, eBlick Medienberatung
- * @license    LGPL-3.0+
- * @link       https://github.com/eBlick/contao-trigger
- *
- * @author     Moritz Vondano
- */
-
 namespace EBlick\ContaoTrigger\EventListener\DataContainer;
-
 
 use Contao\Backend;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Framework\FrameworkAwareInterface;
-use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
+use Contao\Date;
 use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
@@ -29,40 +18,14 @@ use EBlick\ContaoTrigger\DataContainer\DataContainerComponentInterface;
 use EBlick\ContaoTrigger\DataContainer\Definition;
 use EBlick\ContaoTrigger\EventListener\TriggerListener;
 
-class Trigger implements FrameworkAwareInterface
+class Trigger
 {
-    use FrameworkAwareTrait;
-
-    /** @var ComponentManager */
-    private $componentManager;
-
-    /** @var Connection */
-    private $database;
-
-    /** @var TriggerListener */
-    private $triggerSystem;
-
-    /**
-     * Trigger constructor.
-     *
-     * @param ComponentManager $componentManager
-     * @param Connection       $database
-     * @param TriggerListener  $triggerSystem
-     */
-    public function __construct(
-        ComponentManager $componentManager,
-        Connection $database,
-        TriggerListener $triggerSystem
-    ) {
-        $this->componentManager = $componentManager;
-        $this->database         = $database;
-        $this->triggerSystem    = $triggerSystem;
+    public function __construct(private ComponentManager $componentManager, private Connection $connection, private TriggerListener $triggerSystem, private ContaoFramework $framework)
+    {
     }
 
     /**
      * Import data container definitions from components.
-     *
-     * @param string $table
      */
     public function onImportDefinitions(string $table): void
     {
@@ -95,95 +58,51 @@ class Trigger implements FrameworkAwareInterface
         }
     }
 
-    /**
-     * Merge datacontainer properties as a sub component.
-     *
-     * @param string     $componentType
-     * @param string     $componentName
-     * @param Definition $definition
-     */
-    private function importComponent(string $componentType, string $componentName, Definition $definition): void
-    {
-        $node = &$GLOBALS['TL_DCA']['tl_eblick_trigger'];
-
-        // add component to respective component selector
-        $node['fields'][$componentType . '_type']['options'][] = $componentName;
-
-        // add palettes (as a sub palette), fields, selectors and sub palettes
-        $node['subpalettes'][$componentType . '_type_' . $componentName] = $definition->palette;
-        foreach ($definition->fields as $fieldName => $field) {
-            $node['fields'][$fieldName] = $field;
-        }
-        foreach ($definition->selectors as $selector) {
-            $node['palettes']['__selector__'][] = $selector;
-        }
-        foreach ($definition->subPalettes as $subPaletteName => $subPalette) {
-            $node['subpalettes'][$subPaletteName] = $subPalette;
-        }
-    }
-
-    /**
-     * @param DataContainer $dc
-     *
-     * @return string
-     */
     public function onGetError(DataContainer $dc): string
     {
         if (!$dc->activeRecord->error) {
             return '';
         }
+
         return sprintf(
             '<div class="widget clr trigger-error"><h3>%s</h3><span><i>%s</i><br><br>%s</span></div>',
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['error'][0],
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['error'][1],
-            nl2br_html5($dc->activeRecord->error)
+            nl2br($dc->activeRecord->error)
         );
     }
 
-    /**
-     * @param DataContainer $dc
-     *
-     * @throws \Doctrine\DBAL\DBALException
-     */
     public function onResetError(DataContainer $dc): void
     {
-        $this->database->executeQuery(
+        $this->connection->executeQuery(
             'UPDATE tl_eblick_trigger SET error = NULL WHERE id =?',
             [$dc->id]
         );
     }
 
-    /**
-     * @param array $row
-     *
-     * @return string
-     * @throws \Doctrine\DBAL\DBALException
-     */
     public function onGenerateLabel(array $row): string
     {
         if ($row['error']) {
             $state = 'error';
+        } elseif ($row['enabled']) {
+            $state = $row['lastRun'] ? 'running' : 'waiting';
         } else {
-            if ($row['enabled']) {
-                $state = $row['lastRun'] ? 'running' : 'waiting';
-            } else {
-                $state = 'paused';
-            }
+            $state = 'paused';
         }
 
         $this->framework->initialize();
-        /** @noinspection PhpUndefinedMethodInspection */
         $datimFormat = $this->framework->getAdapter(Config::class)->get('datimFormat');
 
         $lastRun = $row['lastRun'] ?
-            \Date::parse($datimFormat, $row['lastRun']) . ' (' . ($row['lastDuration'] / 1000) . 's)' : '[…]';
+            Date::parse($datimFormat, $row['lastRun']).' ('.($row['lastDuration'] / 1000).'s)' : '[…]';
 
-        $numRuns = $this->database
+        $numRuns = (int) $this->connection
             ->executeQuery('SELECT COUNT(*) FROM tl_eblick_trigger_log WHERE pid =?', [$row['id']])
-            ->fetch(\PDO::FETCH_COLUMN);
+            ->fetchOne()
+        ;
 
         return sprintf(
-            '<div class="trigger-list trigger-state-%s"><span class="title">%s</span>' .
+            '<div class="trigger-list trigger-state-%s"><span class="title">%s</span>'.
             '<div class="icon"></div><div class="type">%s → %s (%s)<br><span>%s</span></div></div>',
             $state,
             $row['title'],
@@ -194,24 +113,8 @@ class Trigger implements FrameworkAwareInterface
         );
     }
 
-    /**
-     * @param array  $row
-     * @param string $href
-     * @param string $label
-     * @param string $title
-     * @param string $icon
-     * @param string $attributes
-     *
-     * @return string
-     */
-    public function onShowSimulateButton(
-        array $row,
-        string $href,
-        ?string $label,
-        string $title,
-        string $icon,
-        string $attributes
-    ): string {
+    public function onShowSimulateButton(array $row, string $href, string|null $label, string $title, string $icon, string $attributes): string
+    {
         // only show for disabled triggers
         if ($row['enabled']) {
             return '';
@@ -219,51 +122,63 @@ class Trigger implements FrameworkAwareInterface
 
         return sprintf(
             '<a href="%s" title="%s"%s>%s</a> ',
-            Backend::addToUrl($href . '&amp;id=' . $row['id']),
+            Backend::addToUrl($href.'&amp;id='.$row['id']),
             StringUtil::specialchars($title),
             $attributes,
             Image::getHtml($icon, $label)
         );
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function onExecute(): void
     {
         $this->triggerSystem->onExecute();
         $this->redirectBack();
     }
 
-    /**
-     * @param DataContainer $dc
-     *
-     * @throws \Exception
-     */
     public function onSimulate(DataContainer $dc): void
     {
-        $this->triggerSystem->onSimulate($dc->id);
+        $this->triggerSystem->onSimulate((int) $dc->id);
         $this->redirectBack();
     }
 
-    /**
-     * @param DataContainer $dc
-     *
-     * @throws \Doctrine\DBAL\DBALException
-     */
     public function onReset(DataContainer $dc): void
     {
-        $this->database->executeQuery(
+        $this->connection->executeQuery(
             'DELETE FROM tl_eblick_trigger_log WHERE pid =?',
             [$dc->id]
         );
-        $this->database->executeQuery(
+        $this->connection->executeQuery(
             'UPDATE tl_eblick_trigger SET lastDuration = 0, lastRun = 0 WHERE id =?',
             [$dc->id]
         );
 
         $this->redirectBack();
+    }
+
+    /**
+     * Merge datacontainer properties as a sub component.
+     */
+    private function importComponent(string $componentType, string $componentName, Definition $definition): void
+    {
+        $node = &$GLOBALS['TL_DCA']['tl_eblick_trigger'];
+
+        // add component to respective component selector
+        $node['fields'][$componentType.'_type']['options'][] = $componentName;
+
+        // add palettes (as a sub palette), fields, selectors and sub palettes
+        $node['subpalettes'][$componentType.'_type_'.$componentName] = $definition->palette;
+
+        foreach ($definition->fields as $fieldName => $field) {
+            $node['fields'][$fieldName] = $field;
+        }
+
+        foreach ($definition->selectors as $selector) {
+            $node['palettes']['__selector__'][] = $selector;
+        }
+
+        foreach ($definition->subPalettes as $subPaletteName => $subPalette) {
+            $node['subpalettes'][$subPaletteName] = $subPalette;
+        }
     }
 
     /**
@@ -273,9 +188,8 @@ class Trigger implements FrameworkAwareInterface
     {
         $this->framework->initialize();
 
-        /** @var \Contao\Controller $controller */
+        /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
-        /** @noinspection PhpUndefinedMethodInspection */
         /** @noinspection StaticInvocationViaThisInspection */
         $controller->redirect($controller->addToUrl(null, true, ['key']));
     }

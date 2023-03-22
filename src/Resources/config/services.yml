@@ -31,6 +31,7 @@ services:
     arguments:
      - '@database_connection'
      - '@eblick_contao_trigger.execution.row_data_compiler'
+     - '@contao.framework'
     tags:
       - { name: eblick_contao_trigger.condition, alias: table }
 
@@ -43,5 +44,7 @@ services:
 
   eblick_contao_trigger.component.notification_action:
     class: EBlick\ContaoTrigger\Component\Action\NotificationAction
+    arguments:
+      - '@contao.framework'
     tags:
       - { name: eblick_contao_trigger.action, alias: notification }
