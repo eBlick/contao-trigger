@@ -42,7 +42,8 @@
   },
   "autoload": {
     "psr-4": {
-      "EBlick\\ContaoTrigger\\": "src/"
+      "EBlick\\ContaoTrigger\\": "src/",
+      "EBlick\\ContaoTrigger\\Test\\": "tests/"
     }
   },
   "extra": {
