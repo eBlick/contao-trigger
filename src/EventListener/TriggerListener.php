@@ -35,11 +35,6 @@ class TriggerListener
      */
     public function onExecute(): void
     {
-        // temporary fix to circumvent easy themes bug
-        if ('BE' === TL_MODE && null === $this->requestStack->getCurrentRequest()) {
-            return;
-        }
-
         $triggers = $this->connection
             ->executeQuery(
                 'SELECT * FROM tl_eblick_trigger '.
