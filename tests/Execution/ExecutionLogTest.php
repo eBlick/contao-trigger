@@ -19,53 +19,67 @@ class ExecutionLogTest extends TestCase
 {
     public function testGetLogWithoutOrigin(): void
     {
-        $data = [2 => [['id' => 4, 'pid' => 5, 'tstamp' => 1234, 'origin' => 'tl_someTable']]];
-
         $result = $this->createMock(Result::class);
         $result
             ->expects(self::once())
             ->method('fetchAllAssociative')
-            ->willReturn($data)
+            ->willReturn([
+                ['id' => 1, 'pid' => 12, 'tstamp' => 1234, 'origin' => 'tl_someTable', 'originId' => 4, 'simulated' => ''],
+                ['id' => 2, 'pid' => 12, 'tstamp' => 2345, 'origin' => 'tl_otherTable', 'originId' => 7, 'simulated' => ''],
+            ])
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects(self::once())
             ->method('executeQuery')
-            ->with('SELECT originId, l.* FROM tl_eblick_trigger_log l WHERE pid=?', [12])
+            ->with('SELECT * FROM tl_eblick_trigger_log WHERE pid=?', [12])
             ->willReturn($result)
         ;
 
         $log = new ExecutionLog($connection);
-        self::assertEquals($data, $log->getLog(12));
+
+        $expected = [
+            4 => ['id' => 1, 'pid' => 12, 'tstamp' => 1234, 'origin' => 'tl_someTable', 'originId' => 4, 'simulated' => ''],
+            7 => ['id' => 2, 'pid' => 12, 'tstamp' => 2345, 'origin' => 'tl_otherTable', 'originId' => 7, 'simulated' => ''],
+        ];
+
+        self::assertEquals($expected, $log->getLog(12));
     }
 
     public function testGetLogWithOrigin(): void
     {
-        $data = [2 => [['id' => 4, 'pid' => 5, 'tstamp' => 1234, 'origin' => 'tl_someTable']]];
-
         $result = $this->createMock(Result::class);
         $result
             ->expects(self::once())
             ->method('fetchAllAssociative')
-            ->willReturn($data)
+            ->willReturn([
+                ['id' => 1, 'pid' => 12, 'tstamp' => 1234, 'origin' => 'tl_someTable', 'originId' => 4, 'simulated' => ''],
+                ['id' => 2, 'pid' => 12, 'tstamp' => 2345, 'origin' => 'tl_someTable', 'originId' => 7, 'simulated' => ''],
+            ])
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects(self::once())
             ->method('executeQuery')
-            ->with('SELECT originId, l.* FROM tl_eblick_trigger_log l WHERE pid=? AND origin =?', [12, 'tl_someTable'])
+            ->with('SELECT * FROM tl_eblick_trigger_log WHERE pid=? AND origin =?', [12, 'tl_someTable'])
             ->willReturn($result)
         ;
 
         $log = new ExecutionLog($connection);
-        self::assertEquals($data, $log->getLog(12, 'tl_someTable'));
+
+        $expected = [
+            4 => ['id' => 1, 'pid' => 12, 'tstamp' => 1234, 'origin' => 'tl_someTable', 'originId' => 4, 'simulated' => ''],
+            7 => ['id' => 2, 'pid' => 12, 'tstamp' => 2345, 'origin' => 'tl_someTable', 'originId' => 7, 'simulated' => ''],
+        ];
+
+        self::assertEquals($expected, $log->getLog(12, 'tl_someTable'));
     }
 
     public function testAddLogWithoutOriginFails(): void
     {
-        $log = new ExecutionLog($connection = $this->createMock(Connection::class));
+        $log = new ExecutionLog($this->createMock(Connection::class));
 
         $this->expectException(\InvalidArgumentException::class);
         $log->addLog(12, 5, '', false);

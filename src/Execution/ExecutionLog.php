@@ -20,7 +20,7 @@ class ExecutionLog
 
     public function getLog(int $triggerId, string $origin = null): array
     {
-        $query = 'SELECT originId, l.* FROM tl_eblick_trigger_log l WHERE pid=?';
+        $query = 'SELECT * FROM tl_eblick_trigger_log WHERE pid=?';
         $params = [$triggerId];
 
         if (null !== $origin) {
@@ -28,10 +28,13 @@ class ExecutionLog
             $params[] = $origin;
         }
 
-        return $this->connection
-            ->executeQuery($query, $params)
-            ->fetchAllAssociative()
-        ;
+        $logs = [];
+
+        foreach ($this->connection->executeQuery($query, $params)->fetchAllAssociative() as $result) {
+            $logs[$result['originId']] = $result;
+        }
+
+        return $logs;
     }
 
     public function addLog(int $triggerId, int $originId, string $origin, bool $simulated): void
