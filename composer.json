@@ -23,29 +23,51 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
-    "contao/core-bundle": "^4.4.0",
-    "symfony/expression-language": "^3.0|^4.0",
-    "symfony/stopwatch": "^3.0|^4.0"
+    "php": ">=8.1",
+    "contao/core-bundle": "^4.13 || ^5.1",
+    "symfony/expression-language": "^5.4 || ^6.0",
+    "symfony/stopwatch": "^5.4 || ^6.0",
+    "symfony/lock": "^5.4 || ^6.0",
+    "doctrine/dbal": "^3.3"
   },
   "require-dev": {
+    "bamarni/composer-bin-plugin": "^1.4",
     "contao/manager-plugin": "^2.0",
-    "terminal42/notification_center": "^1.4",
+    "terminal42/notification_center": "^1.7",
     "phpunit/phpunit": "^8.4",
     "contao/test-case": "^4.2"
   },
   "suggest": {
-    "terminal42/notification_center": "^1.4"
-  },
-  "conflict": {
-    "doctrine/dbal": "2.7.0"
+    "terminal42/notification_center": "^1.7"
   },
   "autoload": {
     "psr-4": {
-      "EBlick\\ContaoTrigger\\": "src/"
+      "EBlick\\ContaoTrigger\\": "src/",
+      "EBlick\\ContaoTrigger\\Test\\": "tests/"
     }
   },
   "extra": {
-    "contao-manager-plugin": "EBlick\\ContaoTrigger\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "EBlick\\ContaoTrigger\\ContaoManager\\Plugin",
+    "bamarni-bin": {
+      "bin-links": false,
+      "target-directory": "tools"
+    }
+  },
+  "scripts": {
+    "cs": [
+      "tools/ecs/vendor/bin/ecs check src tests --config tools/ecs/config/default.php --fix --ansi"
+    ],
+    "tests": [
+      "vendor/bin/phpunit --colors=always"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "bamarni/composer-bin-plugin": true,
+      "contao-components/installer": true,
+      "contao/manager-plugin": true,
+      "contao-community-alliance/composer-plugin": true,
+      "php-http/discovery": false
+    }
   }
 }

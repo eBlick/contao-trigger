@@ -3,13 +3,9 @@
 declare(strict_types=1);
 
 /*
- * Trigger Framework Bundle for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2018, eBlick Medienberatung
- * @license    LGPL-3.0+
- * @link       https://github.com/eBlick/contao-trigger
- *
- * @author     Moritz Vondano
+ * @copyright eBlick Medienberatung
+ * @license   LGPL-3.0+
+ * @link      https://github.com/eBlick/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Component;
@@ -19,17 +15,18 @@ use EBlick\ContaoTrigger\Component\Condition\ConditionInterface;
 
 class ComponentManager
 {
-    /** @var array */
-    private $conditions = [];
+    /**
+     * @var array<string, ConditionInterface>
+     */
+    private array $conditions = [];
 
-    /** @var array */
-    private $actions = [];
+    /**
+     * @var array<string, ActionInterface>
+     */
+    private array $actions = [];
 
     /**
      * Register a condition.
-     *
-     * @param ConditionInterface $condition
-     * @param string             $alias
      */
     public function addCondition(ConditionInterface $condition, string $alias): void
     {
@@ -38,9 +35,6 @@ class ComponentManager
 
     /**
      * Register an action.
-     *
-     * @param ActionInterface $action
-     * @param string          $name
      */
     public function addAction(ActionInterface $action, string $name): void
     {
@@ -50,52 +44,36 @@ class ComponentManager
     /**
      * Returns an array of all registered condition names.
      *
-     * @return array
+     * @return list<string>
      */
     public function getConditionNames(): array
     {
-        return \array_keys($this->conditions);
+        return array_keys($this->conditions);
     }
 
     /**
      * Get a certain condition.
-     *
-     * @param $name
-     *
-     * @return ConditionInterface|null
      */
-    public function getCondition($name): ?ConditionInterface
+    public function getCondition(string $name): ConditionInterface|null
     {
-        if (!\array_key_exists($name, $this->conditions)) {
-            return null;
-        }
-
-        return $this->conditions[$name];
+        return $this->conditions[$name] ?? null;
     }
 
     /**
      * Returns an array of all registered action names.
      *
-     * @return array
+     * @return list<string>
      */
     public function getActionNames(): array
     {
-        return \array_keys($this->actions);
+        return array_keys($this->actions);
     }
 
     /**
      * Get a certain action.
-     *
-     * @param $name
-     *
-     * @return ActionInterface|null
      */
-    public function getAction($name): ?ActionInterface
+    public function getAction(string $name): ActionInterface|null
     {
-        if (!\array_key_exists($name, $this->actions)) {
-            return null;
-        }
-
-        return $this->actions[$name];
+        return $this->actions[$name] ?? null;
     }
 }

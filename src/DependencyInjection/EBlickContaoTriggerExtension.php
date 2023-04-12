@@ -3,13 +3,9 @@
 declare(strict_types=1);
 
 /*
- * Trigger Framework Bundle for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2018, eBlick Medienberatung
- * @license    LGPL-3.0+
- * @link       https://github.com/eBlick/contao-trigger
- *
- * @author     Moritz Vondano
+ * @copyright eBlick Medienberatung
+ * @license   LGPL-3.0+
+ * @link      https://github.com/eBlick/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\DependencyInjection;
@@ -23,20 +19,13 @@ class EBlickContaoTriggerExtension extends Extension
 {
     private const files = [
         'services.yml',
-        'listener.yml'
+        'listener.yml',
     ];
 
-    /**
-     * Loads a specific configuration.
-     *
-     * @param array            $configs   An array of configuration values
-     * @param ContainerBuilder $container A ContainerBuilder instance
-     *
-     * @throws \Exception
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+
         foreach (self::files as $file) {
             $loader->load($file);
         }

@@ -3,13 +3,9 @@
 declare(strict_types=1);
 
 /*
- * Trigger Framework Bundle for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2018, eBlick Medienberatung
- * @license    LGPL-3.0+
- * @link       https://github.com/eBlick/contao-trigger
- *
- * @author     Moritz Vondano
+ * @copyright eBlick Medienberatung
+ * @license   LGPL-3.0+
+ * @link      https://github.com/eBlick/contao-trigger
  */
 
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['execute'] = 'Manually refresh';
@@ -53,9 +49,7 @@ $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_table_expression'] = ['Custom Expr
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['condition']['time'] = ['Point in Time'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['cnd_time_executionTime'] = ['Date/Time', 'Action will be executed, when this moment in time is reached.'];
 
-
 // notification action
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action']['notification'] = ['Notification'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action_notification_entity'] = ['Notification', 'Choose a trigger notification from the notification center.'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['action_notification_tokens'] = 'Available tokens';
-

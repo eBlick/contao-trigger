@@ -3,22 +3,18 @@
 declare(strict_types=1);
 
 /*
- * Trigger Framework Bundle for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2018, eBlick Medienberatung
- * @license    LGPL-3.0+
- * @link       https://github.com/eBlick/contao-trigger
- *
- * @author     Moritz Vondano
+ * @copyright eBlick Medienberatung
+ * @license   LGPL-3.0+
+ * @link      https://github.com/eBlick/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\EventListener\DataContainer;
 
 use Contao\Controller;
-use Contao\CoreBundle\Framework\FrameworkAwareInterface;
-use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\DateTimeType;
@@ -27,43 +23,24 @@ use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\TimeType;
 use EBlick\ContaoTrigger\ExpressionLanguage\RowDataCompiler;
-use Symfony\Component\ExpressionLanguage\SyntaxError;
 
-class TableCondition implements FrameworkAwareInterface
+class TableCondition
 {
-    use FrameworkAwareTrait;
+    private AbstractSchemaManager $schemaManager;
 
-    /** @var Connection */
-    private $database;
-
-    /** @var RowDataCompiler */
-    private $rowDataCompiler;
-
-    /**
-     * TableCondition constructor.
-     *
-     * @param Connection      $database
-     * @param RowDataCompiler $rowDataCompiler
-     */
-    public function __construct(Connection $database, RowDataCompiler $rowDataCompiler)
+    public function __construct(private Connection $connection, private RowDataCompiler $rowDataCompiler, private ContaoFramework $framework)
     {
-        $this->database        = $database;
-        $this->rowDataCompiler = $rowDataCompiler;
+        $this->schemaManager = $this->connection->createSchemaManager();
     }
 
     /**
      * Returns a list of available tables.
-     *
-     * @return array
      */
     public function onGetTables(): array
     {
         $tables = array_map(
-            function ($table) {
-                /** @var $table Table */
-                return $table->getName();
-            },
-            $this->database->getSchemaManager()->listTables()
+            static fn (Table $table): string => $table->getName(),
+            $this->schemaManager->listTables()
         );
 
         // exclude tables
@@ -79,9 +56,10 @@ class TableCondition implements FrameworkAwareInterface
             'tl_search',
             'tl_search_index',
             'tl_undo',
-            'tl_version'
+            'tl_version',
         ];
-        $tables         = array_diff(
+
+        $tables = array_diff(
             array_values($tables),
             $excludedTables
         );
@@ -92,19 +70,15 @@ class TableCondition implements FrameworkAwareInterface
 
     /**
      * Returns a list of table columns that can contain time information.
-     *
-     * @param DataContainer $dc
-     *
-     * @return array
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function onGetTimeColumns(DataContainer $dc): array
     {
-        $table = $this->database
+        $table = $this->connection
             ->executeQuery('SELECT cnd_table_src FROM tl_eblick_trigger WHERE id = ?', [$dc->id])
-            ->fetch(\PDO::FETCH_COLUMN);
+            ->fetchOne()
+        ;
 
-        if (!$table || !$this->database->getSchemaManager()->tablesExist([$table])) {
+        if (!$table || !$this->schemaManager->tablesExist([$table])) {
             return [];
         }
 
@@ -118,7 +92,7 @@ class TableCondition implements FrameworkAwareInterface
         /** @noinspection StaticInvocationViaThisInspection */
         $controller->loadLanguageFile($table);
 
-        foreach ($this->database->getSchemaManager()->listTableColumns($table) as $column) {
+        foreach ($this->schemaManager->listTableColumns($table) as $column) {
             if ($this->canBeDateTimeColumn($column)) {
                 $columns[$column->getName()] = $this->buildFieldLabel($table, $column->getName());
             }
@@ -127,60 +101,6 @@ class TableCondition implements FrameworkAwareInterface
         return $columns;
     }
 
-    /**
-     * @param Column $column
-     *
-     * @return bool
-     */
-    private function canBeDateTimeColumn(Column $column): bool
-    {
-        $type = $column->getType();
-
-        switch (true) {
-            case $type instanceof StringType:
-                return 10 === $column->getLength();
-
-            case $type instanceof IntegerType:
-                return !\in_array($column->getName(), ['id', 'pid'])
-                       && ($column->getLength() ? $column->getLength() >= 10 : true);
-
-            case $type instanceof DateTimeType:
-            case $type instanceof DateType:
-            case $type instanceof TimeType:
-                return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $table
-     * @param $field
-     *
-     * @return string
-     */
-    private function buildFieldLabel($table, $field): string
-    {
-        if (!array_key_exists($table, $GLOBALS['TL_LANG'])
-            || !array_key_exists($field, $GLOBALS['TL_LANG'][$table])
-            || !$GLOBALS['TL_LANG'][$table][$field]) {
-            return $field;
-        }
-        $label = \is_array(
-            $GLOBALS['TL_LANG'][$table][$field]
-        ) ? $GLOBALS['TL_LANG'][$table][$field][0] : $GLOBALS['TL_LANG'][$table][$field];
-
-        return sprintf('%s (%s)', $label, $field);
-    }
-
-    /**
-     * @param               $var
-     * @param DataContainer $dc
-     *
-     * @return string
-     *
-     * @throws SyntaxError
-     */
     public function onValidateExpression($var, DataContainer $dc): string
     {
         if (!$var) {
@@ -188,7 +108,8 @@ class TableCondition implements FrameworkAwareInterface
         }
 
         $columns = [];
-        foreach ($this->database->getSchemaManager()->listTableColumns($dc->activeRecord->cnd_table_src) as $column) {
+
+        foreach ($this->schemaManager->listTableColumns($dc->activeRecord->cnd_table_src) as $column) {
             $columns[] = $column->getName();
         }
 
@@ -196,5 +117,34 @@ class TableCondition implements FrameworkAwareInterface
         $this->rowDataCompiler->compileRowExpression($var, $columns);
 
         return $var;
+    }
+
+    private function canBeDateTimeColumn(Column $column): bool
+    {
+        $type = $column->getType();
+
+        return match (true) {
+            $type instanceof StringType => 10 === $column->getLength(),
+            $type instanceof IntegerType => !\in_array($column->getName(), ['id', 'pid'], true)
+                && (!$column->getLength() || $column->getLength() >= 10),
+            $type instanceof DateTimeType, $type instanceof DateType, $type instanceof TimeType => true,
+            default => false,
+        };
+    }
+
+    private function buildFieldLabel(string $table, string $field): string
+    {
+        if (
+            !\array_key_exists($table, $GLOBALS['TL_LANG'])
+            || !\array_key_exists($field, $GLOBALS['TL_LANG'][$table])
+            || !$GLOBALS['TL_LANG'][$table][$field]
+        ) {
+            return $field;
+        }
+        $label = \is_array(
+            $GLOBALS['TL_LANG'][$table][$field]
+        ) ? $GLOBALS['TL_LANG'][$table][$field][0] : $GLOBALS['TL_LANG'][$table][$field];
+
+        return sprintf('%s (%s)', $label, $field);
     }
 }

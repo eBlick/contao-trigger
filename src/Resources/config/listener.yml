@@ -1,13 +1,4 @@
 services:
-  _instanceof:
-    Contao\CoreBundle\Framework\FrameworkAwareInterface:
-      calls:
-        - ['setFramework', ['@contao.framework']]
-
-    Symfony\Component\DependencyInjection\ContainerAwareInterface:
-      calls:
-        - ['setContainer', ['@service_container']]
-
   # trigger execution
   eblick_contao_trigger.listener.trigger:
     class: 'EBlick\ContaoTrigger\EventListener\TriggerListener'
@@ -18,14 +9,23 @@ services:
     - '@eblick_contao_trigger.execution.context_factory'
     - '@request_stack'
     public: true
+    tags:
+      - { name: 'contao.cronjob', interval: 'minutely', method: 'onExecute'}
 
   # data container
+  eblick_contao_trigger.listener.datacontainer.common:
+    class: 'EBlick\ContaoTrigger\EventListener\DataContainer\Common'
+    tags:
+      - { name: 'contao.callback', table: 'tl_eblick_trigger', target: 'config.onload', method: 'addBackendCss'}
+      - { name: 'contao.callback', table: 'tl_eblick_trigger_log', target: 'config.onload', method: 'addBackendCss'}
+
   eblick_contao_trigger.listener.datacontainer.trigger:
     class: 'EBlick\ContaoTrigger\EventListener\DataContainer\Trigger'
     arguments:
     - '@eblick_contao_trigger.component.component_manager'
     - '@database_connection'
     - '@eblick_contao_trigger.listener.trigger'
+    - '@contao.framework'
     tags:
       - { name: 'contao.hook', hook: 'loadDataContainer', method: 'onImportDefinitions'}
     public: true
@@ -39,6 +39,7 @@ services:
     arguments:
     - '@database_connection'
     - '@eblick_contao_trigger.execution.row_data_compiler'
+    - '@contao.framework'
     public: true
 
   eblick_contao_trigger.listener.datacontainer.notification_action:

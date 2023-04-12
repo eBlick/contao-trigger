@@ -3,13 +3,9 @@
 declare(strict_types=1);
 
 /*
- * Trigger Framework Bundle for Contao Open Source CMS
- *
- * @copyright  Copyright (c) 2018, eBlick Medienberatung
- * @license    LGPL-3.0+
- * @link       https://github.com/eBlick/contao-trigger
- *
- * @author     Moritz Vondano
+ * @copyright eBlick Medienberatung
+ * @license   LGPL-3.0+
+ * @link      https://github.com/eBlick/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Component;
@@ -21,34 +17,27 @@ use PHPUnit\Framework\TestCase;
 
 class ComponentManagerTest extends TestCase
 {
-    public function testInstantiation() : void
-    {
-        $obj = new ComponentManager();
-
-        $this->assertInstanceOf(ComponentManager::class, $obj);
-    }
-
-    public function testAddAndGetCondition() : void
+    public function testAddAndGetCondition(): void
     {
         $manager = new ComponentManager();
 
         $condition = $this->createMock(ConditionInterface::class);
         $manager->addCondition($condition, 'testCondition');
 
-        $this->assertEquals($condition, $manager->getCondition('testCondition'));
+        self::assertEquals($condition, $manager->getCondition('testCondition'));
     }
 
-    public function testAddAndGetAction() : void
+    public function testAddAndGetAction(): void
     {
         $manager = new ComponentManager();
 
         $action = $this->createMock(ActionInterface::class);
         $manager->addAction($action, 'testAction');
 
-        $this->assertEquals($action, $manager->getAction('testAction'));
+        self::assertEquals($action, $manager->getAction('testAction'));
     }
 
-    public function testGetConditionNames() : void
+    public function testGetConditionNames(): void
     {
         $manager = new ComponentManager();
 
@@ -57,10 +46,10 @@ class ComponentManagerTest extends TestCase
         $manager->addCondition($condition1, 'testCondition1');
         $manager->addCondition($condition2, 'testCondition2');
 
-        $this->assertEquals(['testCondition1', 'testCondition2'], $manager->getConditionNames());
+        self::assertEquals(['testCondition1', 'testCondition2'], $manager->getConditionNames());
     }
 
-    public function testGetActionNames() : void
+    public function testGetActionNames(): void
     {
         $manager = new ComponentManager();
 
@@ -69,6 +58,6 @@ class ComponentManagerTest extends TestCase
         $manager->addAction($action1, 'testAction1');
         $manager->addAction($action2, 'testAction2');
 
-        $this->assertEquals(['testAction1', 'testAction2'], $manager->getActionNames());
+        self::assertEquals(['testAction1', 'testAction2'], $manager->getActionNames());
     }
 }
