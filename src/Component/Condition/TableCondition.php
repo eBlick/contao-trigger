@@ -255,7 +255,7 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
             if ($trigger->cnd_table_overwriteExecutionTime) {
                 $timeComparisonSql = 'CONCAT(DATE('.$timeComparisonSql.'), ?)';
 
-                $params[] = ' '.date('H:m:s', (int) $trigger->cnd_table_executionTime);
+                $params[] = ' '.date('H:i:s', (int) $trigger->cnd_table_executionTime);
                 $types[] = ParameterType::STRING;
             }
 
