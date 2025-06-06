@@ -98,4 +98,34 @@ class TableConditionTest extends TestCase
 
         self::assertEquals($result, ['testCol1' => null, 'testCol2' => null, 'testCol3' => null]);
     }
+
+    public function testBuildQueryFormatsExecutionTime(): void
+    {
+        $reflection = new \ReflectionClass(TableCondition::class);
+        $method = $reflection->getMethod('buildQuery');
+        $method->setAccessible(true);
+
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+
+        $connection = $this->createMock(Connection::class);
+        $connection->method('createSchemaManager')->willReturn($schemaManager);
+        $connection->method('quoteIdentifier')->willReturnCallback(static fn ($v) => '`'.$v.'`');
+
+        $condition = new TableCondition($connection, $this->createMock(RowDataCompiler::class));
+
+        $trigger = (object) [
+            'cnd_table_src' => 'test',
+            'cnd_table_timed' => true,
+            'cnd_table_timeColumn' => 'myTime',
+            'cnd_table_timeOffset' => 0,
+            'cnd_table_timeOffsetUnit' => 'DAY',
+            'cnd_table_overwriteExecutionTime' => true,
+            'cnd_table_executionTime' => strtotime('07:30:00'),
+            'cnd_table_expression' => '',
+        ];
+
+        [$query, $params] = $method->invoke($condition, $trigger, []);
+
+        $this->assertSame(' '.date('H:i:s', (int) $trigger->cnd_table_executionTime), $params[1]);
+    }
 }
