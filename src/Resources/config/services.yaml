@@ -4,10 +4,6 @@ services:
       calls:
         - ['setFramework', ['@contao.framework']]
 
-    Symfony\Component\DependencyInjection\ContainerAwareInterface:
-      calls:
-        - ['setContainer', ['@service_container']]
-
   # execution environment
   eblick_contao_trigger.execution.row_data_compiler:
     class: EBlick\ContaoTrigger\ExpressionLanguage\RowDataCompiler
