@@ -18,8 +18,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class EBlickContaoTriggerExtension extends Extension
 {
     private const files = [
-        'services.yml',
-        'listener.yml',
+        'services.yaml',
+        'listener.yaml',
     ];
 
     public function load(array $configs, ContainerBuilder $container): void
