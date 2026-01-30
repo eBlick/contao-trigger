@@ -13,6 +13,7 @@ namespace EBlick\ContaoTrigger\EventListener\DataContainer;
 use Contao\Backend;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Date;
@@ -64,6 +65,7 @@ class Trigger
         }
     }
 
+    #[AsCallback(table: 'tl_eblick_trigger', target: 'fields.error.input_field')]
     public function onGetError(DataContainer $dc): string
     {
         if (!$dc->activeRecord->error) {
@@ -78,6 +80,7 @@ class Trigger
         );
     }
 
+    #[AsCallback(table: 'tl_eblick_trigger', target: 'config.onsubmit')]
     public function onResetError(DataContainer $dc): void
     {
         $this->connection->executeQuery(
@@ -86,6 +89,7 @@ class Trigger
         );
     }
 
+    #[AsCallback(table: 'tl_eblick_trigger', target: 'list.label.label')]
     public function onGenerateLabel(array $row): string
     {
         if ($row['error']) {

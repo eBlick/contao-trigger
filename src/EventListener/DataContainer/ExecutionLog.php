@@ -11,10 +11,12 @@ declare(strict_types=1);
 namespace EBlick\ContaoTrigger\EventListener\DataContainer;
 
 use Contao\Config;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\Date;
 
 class ExecutionLog
 {
+    #[AsCallback(table: 'tl_eblick_trigger_log', target: 'list.label.label')]
     public function onGenerateLabel(array $row): string
     {
         $simulated = $row['simulated'] ?
