@@ -1,4 +1,7 @@
 services:
+  _defaults:
+    autoconfigure: true
+
   # trigger execution
   eblick_contao_trigger.listener.trigger:
     class: 'EBlick\ContaoTrigger\EventListener\TriggerListener'
@@ -47,4 +50,5 @@ services:
     arguments:
     - '@eblick_contao_trigger.component.component_manager'
     - '@database_connection'
+    - '@Terminal42\NotificationCenterBundle\NotificationCenter'
     public: true

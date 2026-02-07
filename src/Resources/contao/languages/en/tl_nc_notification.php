@@ -8,5 +8,6 @@ declare(strict_types=1);
  * @link      https://github.com/eBlick/contao-trigger
  */
 
-$GLOBALS['TL_LANG']['tl_nc_notification']['type']['eblick_trigger'] = 'Trigger';
-$GLOBALS['TL_LANG']['tl_nc_notification']['type']['eblick_notification_action'] = ['Trigger Notification', 'will be executed if a trigger\'s condition is satisfied'];
+use EBlick\ContaoTrigger\NotificationCenter\TriggerNotificationType;
+
+$GLOBALS['TL_LANG']['tl_nc_notification']['type'][TriggerNotificationType::NAME] = ['Trigger Notification', 'will be executed if a trigger\'s condition is satisfied'];

@@ -9,15 +9,11 @@ declare(strict_types=1);
  */
 
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['execute'] = 'Manually refresh';
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['show'][1] = 'Show details of trigger ID%s.';
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['new'] = ['Add a new trigger.'];
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['edit'][1] = 'Edit trigger ID%s.';
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['log'][1] = 'View log of trigger ID%s.';
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['reset'][1] = 'Reset trigger ID%s.';
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['log'] = ['Log', 'View log of trigger ID%s.'];
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['reset'] = ['Reset', 'Reset trigger ID%s.'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['resetConfirm'] = 'This will empty the log and execute all actions again if conditions are met!\nAre you sure?';
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['simulate'][1] = 'Simulate trigger ID%s (without executing actions).';
+$GLOBALS['TL_LANG']['tl_eblick_trigger']['simulate'] = ['Simulate', 'Simulate trigger ID%s (without executing actions).'];
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['simulateConfirm'] = 'This will write simulated trigger log entries for all conditions that are satisfied by now.\nAre you sure?';
-$GLOBALS['TL_LANG']['tl_eblick_trigger']['delete'][1] = 'Delete trigger ID%s.';
 
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['meta_legend'] = 'Meta';
 $GLOBALS['TL_LANG']['tl_eblick_trigger']['title'] = ['Title', 'Specify a name or short description what the trigger does.'];

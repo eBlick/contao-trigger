@@ -25,19 +25,3 @@ ArrayUtil::arrayInsert(
         ],
     ]
 );
-
-// Generic Notification Center action
-$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['eblick_trigger'] = [
-    // Type
-    'eblick_notification_action' => [
-        'recipients' => ['admin_email', 'data_*'],
-        'email_subject' => ['data_*', 'trigger_id', 'trigger_title', 'trigger_startTime', 'admin_email'],
-        'email_text' => ['data_*', 'trigger_id', 'trigger_title', 'trigger_startTime', 'admin_email'],
-        'email_html' => ['data_*', 'trigger_id', 'trigger_title', 'trigger_startTime', 'admin_email'],
-        'email_sender_name' => ['data_*', 'admin_email'],
-        'email_sender_address' => ['data_*', 'admin_email'],
-        'email_recipient_cc' => ['data_*', 'admin_email'],
-        'email_recipient_bcc' => ['data_*', 'admin_email'],
-        'email_replyTo' => ['data_*', 'admin_email'],
-    ],
-];
