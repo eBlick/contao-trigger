@@ -17,7 +17,6 @@ use EBlick\ContaoTrigger\EventListener\TriggerListener;
 use EBlick\ContaoTrigger\Execution\ExecutionContextFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class TriggerListenerTest extends TestCase
 {
@@ -39,11 +38,10 @@ class TriggerListenerTest extends TestCase
         ;
 
         $listener = new TriggerListener(
-            $this->createMock(ComponentManager::class),
+            $this->createStub(ComponentManager::class),
             $connection,
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(ExecutionContextFactory::class),
-            $this->createMock(RequestStack::class),
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(ExecutionContextFactory::class),
         );
 
         \define('TL_MODE', 'FE');

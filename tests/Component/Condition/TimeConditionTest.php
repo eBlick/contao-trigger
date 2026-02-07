@@ -53,7 +53,7 @@ class TimeConditionTest extends TestCase
     public function testGetDataContainerDefinition(): void
     {
         $obj = new TimeCondition(
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
         );
 
         $definition = $obj->getDataContainerDefinition();
@@ -68,7 +68,7 @@ class TimeConditionTest extends TestCase
     public function testGetDataPrototype(): void
     {
         $condition = new TimeCondition(
-            $this->createMock(Connection::class),
+            $this->createStub(Connection::class),
         );
 
         $result = $condition->getDataPrototype(123);

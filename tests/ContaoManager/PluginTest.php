@@ -16,13 +16,14 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use EBlick\ContaoTrigger\ContaoManager\Plugin;
 use EBlick\ContaoTrigger\EBlickContaoTriggerBundle;
 use PHPUnit\Framework\TestCase;
+use Terminal42\NotificationCenterBundle\Terminal42NotificationCenterBundle;
 
 class PluginTest extends TestCase
 {
     public function testGetBundles(): void
     {
         $plugin = new Plugin();
-        $bundles = $plugin->getBundles($this->createMock(ParserInterface::class));
+        $bundles = $plugin->getBundles($this->createStub(ParserInterface::class));
 
         /** @var BundleConfig $config */
         $config = $bundles[0];
@@ -30,6 +31,6 @@ class PluginTest extends TestCase
         $this->assertCount(1, $bundles);
         $this->assertInstanceOf(BundleConfig::class, $config);
         $this->assertSame(EBlickContaoTriggerBundle::class, $config->getName());
-        $this->assertSame([ContaoCoreBundle::class, 'notification-center'], $config->getLoadAfter());
+        $this->assertSame([ContaoCoreBundle::class, Terminal42NotificationCenterBundle::class], $config->getLoadAfter());
     }
 }

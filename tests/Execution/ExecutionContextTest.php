@@ -22,7 +22,7 @@ class ExecutionContextTest extends TestCase
         new ExecutionContext(
             new \stdClass(),
             1234,
-            $this->createMock(ExecutionLog::class),
+            $this->createStub(ExecutionLog::class),
         );
     }
 
@@ -34,7 +34,7 @@ class ExecutionContextTest extends TestCase
         $obj = new ExecutionContext(
             $parameters,
             1234,
-            $this->createMock(ExecutionLog::class),
+            $this->createStub(ExecutionLog::class),
         );
         $this->assertInstanceOf(ExecutionContext::class, $obj);
     }
@@ -48,7 +48,7 @@ class ExecutionContextTest extends TestCase
         $context = new ExecutionContext(
             $parameters,
             12345,
-            $this->createMock(ExecutionLog::class),
+            $this->createStub(ExecutionLog::class),
         );
 
         $this->assertSame(12, $context->getParameters()->id);

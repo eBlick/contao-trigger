@@ -21,7 +21,7 @@ class ComponentManagerTest extends TestCase
     {
         $manager = new ComponentManager();
 
-        $condition = $this->createMock(ConditionInterface::class);
+        $condition = $this->createStub(ConditionInterface::class);
         $manager->addCondition($condition, 'testCondition');
 
         $this->assertSame($condition, $manager->getCondition('testCondition'));
@@ -31,7 +31,7 @@ class ComponentManagerTest extends TestCase
     {
         $manager = new ComponentManager();
 
-        $action = $this->createMock(ActionInterface::class);
+        $action = $this->createStub(ActionInterface::class);
         $manager->addAction($action, 'testAction');
 
         $this->assertSame($action, $manager->getAction('testAction'));
@@ -41,8 +41,8 @@ class ComponentManagerTest extends TestCase
     {
         $manager = new ComponentManager();
 
-        $condition1 = $this->createMock(ConditionInterface::class);
-        $condition2 = $this->createMock(ConditionInterface::class);
+        $condition1 = $this->createStub(ConditionInterface::class);
+        $condition2 = $this->createStub(ConditionInterface::class);
         $manager->addCondition($condition1, 'testCondition1');
         $manager->addCondition($condition2, 'testCondition2');
 
@@ -53,8 +53,8 @@ class ComponentManagerTest extends TestCase
     {
         $manager = new ComponentManager();
 
-        $action1 = $this->createMock(ActionInterface::class);
-        $action2 = $this->createMock(ActionInterface::class);
+        $action1 = $this->createStub(ActionInterface::class);
+        $action2 = $this->createStub(ActionInterface::class);
         $manager->addAction($action1, 'testAction1');
         $manager->addAction($action2, 'testAction2');
 

@@ -10,13 +10,11 @@ declare(strict_types=1);
 
 namespace EBlick\ContaoTrigger\Test\Component\Action;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\TestCase\ContaoTestCase;
 use EBlick\ContaoTrigger\Component\Action\NotificationAction;
-use EBlick\ContaoTrigger\DataContainer\Definition;
 use EBlick\ContaoTrigger\Execution\ExecutionContext;
 use EBlick\ContaoTrigger\Execution\ExecutionLog;
-use NotificationCenter\Model\Notification;
+use Terminal42\NotificationCenterBundle\NotificationCenter;
 
 class NotificationActionTest extends ContaoTestCase
 {
@@ -31,7 +29,7 @@ class NotificationActionTest extends ContaoTestCase
         $context = new ExecutionContext(
             $parameters,
             159800,
-            $this->createMock(ExecutionLog::class),
+            $this->createStub(ExecutionLog::class),
         );
 
         $data = [];
@@ -42,7 +40,7 @@ class NotificationActionTest extends ContaoTestCase
             'trigger_startTime' => 159800,
         ];
 
-        $action = $this->getMockedAction($preparedData, 24);
+        $action = $this->getAction($preparedData, 24);
         $this->assertTrue($action->fire($context, $data));
     }
 
@@ -57,7 +55,7 @@ class NotificationActionTest extends ContaoTestCase
         $context = new ExecutionContext(
             $parameters,
             123456,
-            $this->createMock(ExecutionLog::class),
+            $this->createStub(ExecutionLog::class),
         );
 
         $data = [
@@ -73,16 +71,15 @@ class NotificationActionTest extends ContaoTestCase
             'data_other_value' => 'yes',
         ];
 
-        $action = $this->getMockedAction($preparedData, 24);
+        $action = $this->getAction($preparedData, 24);
         $this->assertTrue($action->fire($context, $data));
     }
 
     public function testGetDataContainerDefinition(): void
     {
-        $obj = new NotificationAction($this->createMock(ContaoFramework::class));
+        $obj = new NotificationAction($this->createStub(NotificationCenter::class));
 
         $definition = $obj->getDataContainerDefinition();
-        $this->assertInstanceOf(Definition::class, $definition);
 
         $this->assertCount(0, $definition->selectors);
         $this->assertCount(0, $definition->subPalettes);
@@ -90,26 +87,15 @@ class NotificationActionTest extends ContaoTestCase
         $this->assertSame('act_notification_entity,act_notification_tokenList', $definition->palette);
     }
 
-    private function getMockedAction($preparedData, $notificationId): NotificationAction
+    private function getAction(array $tokens, int $notificationId): NotificationAction
     {
-        $notification = $this->mockAdapter(['send']);
-        $notification
+        $notificationCenter = $this->createMock(NotificationCenter::class);
+        $notificationCenter
             ->expects($this->once())
-            ->method('send')
-            ->with($preparedData)
-            ->willReturn(true)
+            ->method('sendNotification')
+            ->with($notificationId, $tokens)
         ;
 
-        $notificationAdapter = $this->mockAdapter(['findById']);
-        $notificationAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with($notificationId)
-            ->willReturn($notification)
-        ;
-
-        $framework = $this->mockContaoFramework([Notification::class => $notificationAdapter]);
-
-        return new NotificationAction($framework);
+        return new NotificationAction($notificationCenter);
     }
 }

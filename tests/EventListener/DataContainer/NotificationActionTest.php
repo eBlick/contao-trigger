@@ -16,7 +16,9 @@ use Doctrine\DBAL\Result;
 use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\Component\Condition\ConditionInterface;
 use EBlick\ContaoTrigger\EventListener\DataContainer\NotificationAction;
+use EBlick\ContaoTrigger\NotificationCenter\TriggerNotificationType;
 use PHPUnit\Framework\TestCase;
+use Terminal42\NotificationCenterBundle\NotificationCenter;
 
 class NotificationActionTest extends TestCase
 {
@@ -55,9 +57,9 @@ class NotificationActionTest extends TestCase
             ->willReturn($condition)
         ;
 
-        $action = new NotificationAction($componentManager, $connection);
+        $action = new NotificationAction($componentManager, $connection, $this->createStub(NotificationCenter::class));
 
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $dc
             ->method('__get')
             ->with('id')
@@ -72,28 +74,19 @@ class NotificationActionTest extends TestCase
 
     public function testGetNotificationChoices(): void
     {
-        $data = [4 => 'firstTitle', 63 => 'secondTitle'];
-
-        $result = $this->createMock(Result::class);
-        $result
-            ->expects($this->once())
-            ->method('fetchAllKeyValue')
-            ->willReturn($data)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('executeQuery')
-            ->with("SELECT id, title FROM tl_nc_notification WHERE type='eblick_notification_action' ORDER BY title")
-            ->willReturn($result)
+        $notificationCenter = $this->createStub(NotificationCenter::class);
+        $notificationCenter
+            ->method('getNotificationsForNotificationType')
+            ->with(TriggerNotificationType::NAME)
+            ->willReturn([42 => 'notification'])
         ;
 
         $action = new NotificationAction(
-            $this->createMock(ComponentManager::class),
-            $connection,
+            $this->createStub(ComponentManager::class),
+            $this->createStub(Connection::class),
+            $notificationCenter,
         );
 
-        $this->assertSame($data, $action->getNotificationChoices());
+        $this->assertSame([42 => 'notification'], $action->getNotificationChoices());
     }
 }

@@ -19,7 +19,7 @@ class ExecutionContextFactoryTest extends TestCase
 {
     public function testCreateExecutionContext(): void
     {
-        $factory = new ExecutionContextFactory($this->createMock(ExecutionLog::class));
+        $factory = new ExecutionContextFactory($this->createStub(ExecutionLog::class));
         $parameters = new \stdClass();
         $parameters->id = 4;
 

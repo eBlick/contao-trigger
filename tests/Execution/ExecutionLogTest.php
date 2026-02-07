@@ -79,7 +79,7 @@ class ExecutionLogTest extends TestCase
 
     public function testAddLogWithoutOriginFails(): void
     {
-        $log = new ExecutionLog($this->createMock(Connection::class));
+        $log = new ExecutionLog($this->createStub(Connection::class));
 
         $this->expectException(\InvalidArgumentException::class);
         $log->addLog(12, 5, '', false);
