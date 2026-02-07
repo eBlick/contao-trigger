@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\EventListener\DataContainer;
@@ -28,8 +28,11 @@ class TableCondition
 {
     private AbstractSchemaManager $schemaManager;
 
-    public function __construct(private Connection $connection, private RowDataCompiler $rowDataCompiler, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly RowDataCompiler $rowDataCompiler,
+        private readonly ContaoFramework $framework,
+    ) {
         $this->schemaManager = $this->connection->createSchemaManager();
     }
 
@@ -39,8 +42,8 @@ class TableCondition
     public function onGetTables(): array
     {
         $tables = array_map(
-            static fn (Table $table): string => $table->getName(),
-            $this->schemaManager->listTables()
+            static fn (Table $table): string => $table->getObjectName()->getUnqualifiedName()->getValue(),
+            $this->schemaManager->introspectTables(),
         );
 
         // exclude tables
@@ -50,18 +53,24 @@ class TableCondition
             'tl_eblick_trigger_log',
 
             // contao core
-            'tl_cron',
+            'altcha_challenges',
+            'rememberme_token',
+            'tl_crawl_queue',
+            'tl_cron_job',
+            'tl_job',
             'tl_log',
-            'tl_remember_me',
             'tl_search',
             'tl_search_index',
+            'tl_search_term',
+            'tl_trusted_device',
             'tl_undo',
             'tl_version',
+            'webauthn_credentials',
         ];
 
         $tables = array_diff(
             array_values($tables),
-            $excludedTables
+            $excludedTables,
         );
 
         // key equals value
@@ -92,9 +101,11 @@ class TableCondition
         /** @noinspection StaticInvocationViaThisInspection */
         $controller->loadLanguageFile($table);
 
-        foreach ($this->schemaManager->listTableColumns($table) as $column) {
+        foreach ($this->schemaManager->introspectTableColumnsByUnquotedName($table) as $column) {
             if ($this->canBeDateTimeColumn($column)) {
-                $columns[$column->getName()] = $this->buildFieldLabel($table, $column->getName());
+                $identifier = $column->getObjectName()->getIdentifier()->getValue();
+
+                $columns[$identifier] = $this->buildFieldLabel($table, $identifier);
             }
         }
 
@@ -109,8 +120,8 @@ class TableCondition
 
         $columns = [];
 
-        foreach ($this->schemaManager->listTableColumns($dc->activeRecord->cnd_table_src) as $column) {
-            $columns[] = $column->getName();
+        foreach ($this->schemaManager->introspectTableColumnsByUnquotedName($dc->getActiveRecord()['cnd_table_src']) as $column) {
+            $columns[] = $column->getObjectName()->getIdentifier()->getValue();
         }
 
         // throws syntax error if invalid
@@ -125,7 +136,7 @@ class TableCondition
 
         return match (true) {
             $type instanceof StringType => 10 === $column->getLength(),
-            $type instanceof IntegerType => !\in_array($column->getName(), ['id', 'pid'], true)
+            $type instanceof IntegerType => !\in_array($column->getObjectName()->getIdentifier()->getValue(), ['id', 'pid'], true)
                 && (!$column->getLength() || $column->getLength() >= 10),
             $type instanceof DateTimeType, $type instanceof DateType, $type instanceof TimeType => true,
             default => false,
@@ -142,9 +153,9 @@ class TableCondition
             return $field;
         }
         $label = \is_array(
-            $GLOBALS['TL_LANG'][$table][$field]
+            $GLOBALS['TL_LANG'][$table][$field],
         ) ? $GLOBALS['TL_LANG'][$table][$field][0] : $GLOBALS['TL_LANG'][$table][$field];
 
-        return sprintf('%s (%s)', $label, $field);
+        return \sprintf('%s (%s)', $label, $field);
     }
 }

@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Component\Condition;
@@ -53,26 +53,26 @@ class TimeConditionTest extends TestCase
     public function testGetDataContainerDefinition(): void
     {
         $obj = new TimeCondition(
-            $this->createMock(Connection::class)
+            $this->createStub(Connection::class),
         );
 
         $definition = $obj->getDataContainerDefinition();
-        self::assertInstanceOf(Definition::class, $definition);
+        $this->assertInstanceOf(Definition::class, $definition);
 
-        self::assertCount(0, $definition->selectors);
-        self::assertCount(0, $definition->subPalettes);
-        self::assertCount(1, $definition->fields);
-        self::assertSame('cnd_time_executionTime', $definition->palette);
+        $this->assertCount(0, $definition->selectors);
+        $this->assertCount(0, $definition->subPalettes);
+        $this->assertCount(1, $definition->fields);
+        $this->assertSame('cnd_time_executionTime', $definition->palette);
     }
 
     public function testGetDataPrototype(): void
     {
         $condition = new TimeCondition(
-            $this->createMock(Connection::class)
+            $this->createStub(Connection::class),
         );
 
         $result = $condition->getDataPrototype(123);
-        self::assertEquals($result, ['selectedTime' => null]);
+        $this->assertSame(['selectedTime' => null], $result);
     }
 
     private function getTimeCondition($execute): array
@@ -83,13 +83,14 @@ class TimeConditionTest extends TestCase
 
         $context = $this->createMock(ExecutionContext::class);
         $context
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getLog')
             ->with()
             ->willReturn([])
         ;
+
         $context
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getParameters')
             ->with()
             ->willReturn($parameters)
@@ -97,18 +98,18 @@ class TimeConditionTest extends TestCase
 
         $result = $this->createMock(Result::class);
         $result
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetchOne')
             ->willReturn($execute)
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with(
                 'SELECT cnd_time_executionTime <> 0 && NOW() >= FROM_UNIXTIME(cnd_time_executionTime) FROM tl_eblick_trigger WHERE id=?',
-                [6]
+                [6],
             )
             ->willReturn($result)
         ;

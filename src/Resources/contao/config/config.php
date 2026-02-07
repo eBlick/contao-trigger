@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 use Contao\ArrayUtil;
@@ -23,21 +23,5 @@ ArrayUtil::arrayInsert(
                 'reset' => ['eblick_contao_trigger.listener.datacontainer.trigger', 'onReset'],
             ],
         ],
-    ]
-);
-
-// Generic Notification Center action
-$GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['eblick_trigger'] = [
-    // Type
-    'eblick_notification_action' => [
-        'recipients' => ['admin_email', 'data_*'],
-        'email_subject' => ['data_*', 'trigger_id', 'trigger_title', 'trigger_startTime', 'admin_email'],
-        'email_text' => ['data_*', 'trigger_id', 'trigger_title', 'trigger_startTime', 'admin_email'],
-        'email_html' => ['data_*', 'trigger_id', 'trigger_title', 'trigger_startTime', 'admin_email'],
-        'email_sender_name' => ['data_*', 'admin_email'],
-        'email_sender_address' => ['data_*', 'admin_email'],
-        'email_recipient_cc' => ['data_*', 'admin_email'],
-        'email_recipient_bcc' => ['data_*', 'admin_email'],
-        'email_replyTo' => ['data_*', 'admin_email'],
     ],
-];
+);

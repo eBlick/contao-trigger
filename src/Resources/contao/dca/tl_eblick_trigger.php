@@ -3,16 +3,18 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
+
+use Contao\DC_Table;
 
 $GLOBALS['TL_DCA']['tl_eblick_trigger'] =
     [
         // Config
         'config' => [
-            'dataContainer' => 'Table',
+            'dataContainer' => DC_Table::class,
             'ctable' => ['tl_eblick_trigger_log'],
             'switchToEdit' => true,
             'enableVersioning' => true,
@@ -22,12 +24,6 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger'] =
                     'enabled' => 'index',
                     'condition_type' => 'index',
                     'action_type' => 'index',
-                ],
-            ],
-            'onsubmit_callback' => [
-                [
-                    'eblick_contao_trigger.listener.datacontainer.trigger',
-                    'onResetError',
                 ],
             ],
         ],
@@ -42,10 +38,6 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger'] =
             ],
             'label' => [
                 'fields' => ['title'],
-                'label_callback' => [
-                    'eblick_contao_trigger.listener.datacontainer.trigger',
-                    'onGenerateLabel',
-                ],
             ],
             'global_operations' => [
                 'execute' => [
@@ -53,24 +45,21 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger'] =
                     'href' => 'key=execute',
                     'class' => 'header_icon',
                     'icon' => 'sync.svg',
+                    'primary' => true,
                 ],
             ],
             'operations' => [
-                'show' => [
-                    'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['show'],
-                    'href' => 'act=show',
-                    'icon' => 'show.svg',
-                ],
-                'edit' => [
-                    'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['edit'],
-                    'href' => 'act=edit',
-                    'icon' => 'edit.svg',
-                ],
+                'show',
+                'edit',
+                'delete',
+                '-',
                 'log' => [
                     'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['log'],
                     'href' => 'table=tl_eblick_trigger_log',
                     'icon' => 'bundles/eblickcontaotrigger/img/log.svg',
+                    'primary' => true,
                 ],
+                '-',
                 'simulate' => [
                     'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['simulate'],
                     'href' => 'key=simulate',
@@ -79,24 +68,14 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger'] =
                         'eblick_contao_trigger.listener.datacontainer.trigger',
                         'onShowSimulateButton',
                     ],
-                    'attributes' => 'onclick="if(!confirm(\''
-                                         .($GLOBALS['TL_LANG']['tl_eblick_trigger']['simulateConfirm'] ?? null)
-                                         .'\'))return false;Backend.getScrollOffset()"',
+                    'attributes' => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['tl_eblick_trigger']['simulateConfirm'] ?? null).'\'))return false"',
                 ],
                 'reset' => [
                     'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['reset'],
                     'href' => 'key=reset',
                     'icon' => 'bundles/eblickcontaotrigger/img/reset.svg',
-                    'attributes' => 'onclick="if(!confirm(\''
-                                    .($GLOBALS['TL_LANG']['tl_eblick_trigger']['resetConfirm'] ?? null)
-                                    .'\'))return false;Backend.getScrollOffset()"',
-                ],
-                'delete' => [
-                    'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger']['delete'],
-                    'href' => 'act=delete',
-                    'icon' => 'delete.svg',
-                    'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null)
-                                    .'\'))return false;Backend.getScrollOffset()"',
+                    'attributes' => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['tl_eblick_trigger']['resetConfirm'] ?? null).'\'))return false"',
+                    'primary' => true,
                 ],
             ],
         ],
@@ -144,10 +123,6 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger'] =
             ],
             'error' => [
                 'exclude' => true,
-                'input_field_callback' => [
-                    'eblick_contao_trigger.listener.datacontainer.trigger',
-                    'onGetError',
-                ],
                 'sql' => 'TEXT NULL default NULL',
             ],
             'enabled' => [

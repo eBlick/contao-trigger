@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Component;
@@ -21,43 +21,43 @@ class ComponentManagerTest extends TestCase
     {
         $manager = new ComponentManager();
 
-        $condition = $this->createMock(ConditionInterface::class);
+        $condition = $this->createStub(ConditionInterface::class);
         $manager->addCondition($condition, 'testCondition');
 
-        self::assertEquals($condition, $manager->getCondition('testCondition'));
+        $this->assertSame($condition, $manager->getCondition('testCondition'));
     }
 
     public function testAddAndGetAction(): void
     {
         $manager = new ComponentManager();
 
-        $action = $this->createMock(ActionInterface::class);
+        $action = $this->createStub(ActionInterface::class);
         $manager->addAction($action, 'testAction');
 
-        self::assertEquals($action, $manager->getAction('testAction'));
+        $this->assertSame($action, $manager->getAction('testAction'));
     }
 
     public function testGetConditionNames(): void
     {
         $manager = new ComponentManager();
 
-        $condition1 = $this->createMock(ConditionInterface::class);
-        $condition2 = $this->createMock(ConditionInterface::class);
+        $condition1 = $this->createStub(ConditionInterface::class);
+        $condition2 = $this->createStub(ConditionInterface::class);
         $manager->addCondition($condition1, 'testCondition1');
         $manager->addCondition($condition2, 'testCondition2');
 
-        self::assertEquals(['testCondition1', 'testCondition2'], $manager->getConditionNames());
+        $this->assertSame(['testCondition1', 'testCondition2'], $manager->getConditionNames());
     }
 
     public function testGetActionNames(): void
     {
         $manager = new ComponentManager();
 
-        $action1 = $this->createMock(ActionInterface::class);
-        $action2 = $this->createMock(ActionInterface::class);
+        $action1 = $this->createStub(ActionInterface::class);
+        $action2 = $this->createStub(ActionInterface::class);
         $manager->addAction($action1, 'testAction1');
         $manager->addAction($action2, 'testAction2');
 
-        self::assertEquals(['testAction1', 'testAction2'], $manager->getActionNames());
+        $this->assertSame(['testAction1', 'testAction2'], $manager->getActionNames());
     }
 }

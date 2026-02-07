@@ -3,20 +3,18 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Component\Action;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\TestCase\ContaoTestCase;
 use EBlick\ContaoTrigger\Component\Action\NotificationAction;
-use EBlick\ContaoTrigger\DataContainer\Definition;
 use EBlick\ContaoTrigger\Execution\ExecutionContext;
 use EBlick\ContaoTrigger\Execution\ExecutionLog;
-use NotificationCenter\Model\Notification;
+use Terminal42\NotificationCenterBundle\NotificationCenter;
 
 class NotificationActionTest extends ContaoTestCase
 {
@@ -31,7 +29,7 @@ class NotificationActionTest extends ContaoTestCase
         $context = new ExecutionContext(
             $parameters,
             159800,
-            $this->createMock(ExecutionLog::class)
+            $this->createStub(ExecutionLog::class),
         );
 
         $data = [];
@@ -42,8 +40,8 @@ class NotificationActionTest extends ContaoTestCase
             'trigger_startTime' => 159800,
         ];
 
-        $action = $this->getMockedAction($preparedData, 24);
-        self::assertTrue($action->fire($context, $data));
+        $action = $this->getAction($preparedData, 24);
+        $this->assertTrue($action->fire($context, $data));
     }
 
     public function testFireWithCustomData(): void
@@ -57,7 +55,7 @@ class NotificationActionTest extends ContaoTestCase
         $context = new ExecutionContext(
             $parameters,
             123456,
-            $this->createMock(ExecutionLog::class)
+            $this->createStub(ExecutionLog::class),
         );
 
         $data = [
@@ -73,43 +71,31 @@ class NotificationActionTest extends ContaoTestCase
             'data_other_value' => 'yes',
         ];
 
-        $action = $this->getMockedAction($preparedData, 24);
-        self::assertTrue($action->fire($context, $data));
+        $action = $this->getAction($preparedData, 24);
+        $this->assertTrue($action->fire($context, $data));
     }
 
     public function testGetDataContainerDefinition(): void
     {
-        $obj = new NotificationAction($this->createMock(ContaoFramework::class));
+        $obj = new NotificationAction($this->createStub(NotificationCenter::class));
 
         $definition = $obj->getDataContainerDefinition();
-        self::assertInstanceOf(Definition::class, $definition);
 
-        self::assertCount(0, $definition->selectors);
-        self::assertCount(0, $definition->subPalettes);
-        self::assertCount(2, $definition->fields);
-        self::assertSame('act_notification_entity,act_notification_tokenList', $definition->palette);
+        $this->assertCount(0, $definition->selectors);
+        $this->assertCount(0, $definition->subPalettes);
+        $this->assertCount(2, $definition->fields);
+        $this->assertSame('act_notification_entity,act_notification_tokenList', $definition->palette);
     }
 
-    private function getMockedAction($preparedData, $notificationId): NotificationAction
+    private function getAction(array $tokens, int $notificationId): NotificationAction
     {
-        $notification = $this->mockAdapter(['send']);
-        $notification
-            ->expects(self::once())
-            ->method('send')
-            ->with($preparedData)
-            ->willReturn(true)
+        $notificationCenter = $this->createMock(NotificationCenter::class);
+        $notificationCenter
+            ->expects($this->once())
+            ->method('sendNotification')
+            ->with($notificationId, $tokens)
         ;
 
-        $notificationAdapter = $this->mockAdapter(['findByPk']);
-        $notificationAdapter
-            ->expects(self::once())
-            ->method('findByPk')
-            ->with($notificationId)
-            ->willReturn($notification)
-        ;
-
-        $framework = $this->mockContaoFramework([Notification::class => $notificationAdapter]);
-
-        return new NotificationAction($framework);
+        return new NotificationAction($notificationCenter);
     }
 }

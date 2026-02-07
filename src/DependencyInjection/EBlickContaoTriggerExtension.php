@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\DependencyInjection;
@@ -17,17 +17,11 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class EBlickContaoTriggerExtension extends Extension
 {
-    private const files = [
-        'services.yml',
-        'listener.yml',
-    ];
-
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        foreach (self::files as $file) {
-            $loader->load($file);
-        }
+        $loader->load('services.yaml');
+        $loader->load('listener.yaml');
     }
 }

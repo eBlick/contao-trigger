@@ -27,8 +27,10 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
 {
     private AbstractSchemaManager $schemaManager;
 
-    public function __construct(private Connection $connection, private RowDataCompiler $rowDataCompiler)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly RowDataCompiler $rowDataCompiler,
+    ) {
         $this->schemaManager = $this->connection->createSchemaManager();
     }
 
@@ -74,7 +76,7 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
         return
             array_fill_keys(
                 $this->getColumnNames($srcTable),
-                null
+                null,
             );
     }
 
@@ -201,8 +203,8 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
     private function getColumnNames(string $srcTable): array
     {
         return array_map(
-            static fn (Column $column): string => $column->getName(),
-            $this->schemaManager->listTableColumns($srcTable)
+            static fn (Column $column): string => $column->getObjectName()->getIdentifier()->getValue(),
+            $this->schemaManager->introspectTableColumnsByUnquotedName($srcTable),
         );
     }
 
@@ -213,7 +215,7 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
     {
         $logIds = !empty($log) ? array_keys($log) : [-1];
 
-        $query = 'SELECT * FROM '.$this->connection->quoteIdentifier($trigger->cnd_table_src).' WHERE TRUE';
+        $query = 'SELECT * FROM '.$this->connection->quoteSingleIdentifier($trigger->cnd_table_src).' WHERE TRUE';
         $params = [];
         $types = [];
 
@@ -231,13 +233,13 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
                 !\in_array(
                     $timeUnit = $trigger->cnd_table_timeOffsetUnit,
                     ['MINUTE', 'HOUR', 'DAY'],
-                    true
+                    true,
                 )
             ) {
-                throw new ExecutionException(sprintf('Invalid time offset "%s"!', $trigger->cnd_table_timeOffsetUnit));
+                throw new ExecutionException(\sprintf('Invalid time offset "%s"!', $trigger->cnd_table_timeOffsetUnit));
             }
-            $timeColumn = $this->connection->quoteIdentifier(
-                $trigger->cnd_table_timeColumn
+            $timeColumn = $this->connection->quoteSingleIdentifier(
+                $trigger->cnd_table_timeColumn,
             );
 
             // offset condition
@@ -260,7 +262,7 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
             }
 
             // compose
-            $query .= sprintf(' AND NOW() >= %s', $timeComparisonSql);
+            $query .= \sprintf(' AND NOW() >= %s', $timeComparisonSql);
         }
 
         return [$query, $params, $types];
@@ -275,7 +277,7 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
         try {
             $expressionCallback = $this->rowDataCompiler->compileRowExpression(
                 $expression,
-                $this->getColumnNames($srcTable)
+                $this->getColumnNames($srcTable),
             );
         } catch (SyntaxError $e) {
             throw new ExecutionException($e->getMessage(), 0, $e);

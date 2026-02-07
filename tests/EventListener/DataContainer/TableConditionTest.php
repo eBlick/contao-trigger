@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\EventListener\DataContainer;
@@ -13,6 +13,8 @@ namespace EBlick\ContaoTrigger\Test\EventListener\DataContainer;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Name\Identifier;
+use Doctrine\DBAL\Schema\Name\OptionallyQualifiedName;
 use Doctrine\DBAL\Schema\Table;
 use EBlick\ContaoTrigger\EventListener\DataContainer\TableCondition;
 use EBlick\ContaoTrigger\ExpressionLanguage\RowDataCompiler;
@@ -22,40 +24,38 @@ class TableConditionTest extends TestCase
 {
     public function testOnGetTables(): void
     {
-        $table1 = $this->createMock(Table::class);
-        $table1
-            ->expects(self::once())
-            ->method('getName')
-            ->willReturn('tl_eblick_trigger')
-        ;
-
-        $table2 = $this->createMock(Table::class);
-        $table2
-            ->expects(self::once())
-            ->method('getName')
-            ->willReturn('testTable2')
-        ;
-
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->expects(self::once())
-            ->method('listTables')
-            ->willReturn([$table1, $table2])
+            ->expects($this->once())
+            ->method('introspectTables')
+            ->willReturn([$this->mockTable('tl_eblick_trigger'), $this->mockTable('testTable2')])
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
         $condition = new TableCondition(
             $connection,
-            $this->createMock(RowDataCompiler::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createStub(RowDataCompiler::class),
+            $this->createStub(ContaoFramework::class),
         );
 
-        self::assertEquals(['testTable2' => 'testTable2'], $condition->onGetTables());
+        $this->assertSame(['testTable2' => 'testTable2'], $condition->onGetTables());
+    }
+
+    private function mockTable(string $name): Table
+    {
+        $table = $this->createMock(Table::class);
+        $table
+            ->expects($this->once())
+            ->method('getObjectName')
+            ->willReturn(new OptionallyQualifiedName(Identifier::unquoted($name), null))
+        ;
+
+        return $table;
     }
 }

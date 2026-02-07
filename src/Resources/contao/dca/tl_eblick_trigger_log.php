@@ -3,16 +3,18 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
+
+use Contao\DC_Table;
 
 $GLOBALS['TL_DCA']['tl_eblick_trigger_log'] =
     [
         // Config
         'config' => [
-            'dataContainer' => 'Table',
+            'dataContainer' => DC_Table::class,
             'ptable' => 'tl_eblick_trigger',
             'enableVersioning' => false,
             'notEditable' => true,
@@ -35,26 +37,11 @@ $GLOBALS['TL_DCA']['tl_eblick_trigger_log'] =
             ],
             'label' => [
                 'fields' => ['tstamp'],
-                'label_callback' => [
-                    'eblick_contao_trigger.listener.datacontainer.trigger_log',
-                    'onGenerateLabel',
-                ],
             ],
             'global_operations' => [],
             'operations' => [
-                'show' => [
-                    'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger_log']['show'],
-                    'href' => 'act=show',
-                    'icon' => 'show.svg',
-                ],
-                'delete' => [
-                    'label' => &$GLOBALS['TL_LANG']['tl_eblick_trigger_log']['delete'],
-                    'href' => 'act=delete',
-                    'icon' => 'delete.svg',
-                    'attributes' => 'onclick="if(!confirm(\''
-                                    .($GLOBALS['TL_LANG']['tl_eblick_trigger_log']['deleteConfirm'] ?? null)
-                                    .'\'))return false;Backend.getScrollOffset()"',
-                ],
+                'show',
+                'delete',
             ],
         ],
 

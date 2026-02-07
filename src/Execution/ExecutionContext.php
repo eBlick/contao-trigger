@@ -3,24 +3,28 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Execution;
 
 class ExecutionContext
 {
-    public function __construct(private \stdClass $triggerParameters, private int $startTime, private ExecutionLog $executionLog)
-    {
+    public function __construct(
+        private readonly \stdClass $triggerParameters,
+        private readonly int $startTime,
+        private readonly ExecutionLog $executionLog,
+    ) {
         if (!property_exists($triggerParameters, 'id')) {
             throw new \InvalidArgumentException('Trigger id missing in parameter set.');
         }
     }
 
     /**
-     * Returns a parameter object with all available config parameters of the current trigger.
+     * Returns a parameter object with all available config parameters of the
+     * current trigger.
      */
     public function getParameters(): \stdClass
     {
@@ -36,8 +40,8 @@ class ExecutionContext
     }
 
     /**
-     * Returns an array of log entries associated with this trigger with keys being the origin ids and values a
-     * parameter object of all columns.
+     * Returns an array of log entries associated with this trigger with keys being
+     * the origin ids and values a parameter object of all columns.
      */
     public function getLog(string $origin = 'tl_eblick_trigger'): array
     {
@@ -45,8 +49,8 @@ class ExecutionContext
     }
 
     /**
-     * Returns an array of log entries associated with this trigger with keys being the origin ids and values a
-     * parameter object of all columns.
+     * Returns an array of log entries associated with this trigger with keys being
+     * the origin ids and values a parameter object of all columns.
      */
     public function getAllLogs(): array
     {

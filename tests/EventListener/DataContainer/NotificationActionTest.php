@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\EventListener\DataContainer;
@@ -16,7 +16,9 @@ use Doctrine\DBAL\Result;
 use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\Component\Condition\ConditionInterface;
 use EBlick\ContaoTrigger\EventListener\DataContainer\NotificationAction;
+use EBlick\ContaoTrigger\NotificationCenter\TriggerNotificationType;
 use PHPUnit\Framework\TestCase;
+use Terminal42\NotificationCenterBundle\NotificationCenter;
 
 class NotificationActionTest extends TestCase
 {
@@ -26,14 +28,14 @@ class NotificationActionTest extends TestCase
 
         $result = $this->createMock(Result::class);
         $result
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetchOne')
             ->willReturn('testCondition')
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT condition_type FROM tl_eblick_trigger WHERE id = ?', [9])
             ->willReturn($result)
@@ -41,7 +43,7 @@ class NotificationActionTest extends TestCase
 
         $condition = $this->createMock(ConditionInterface::class);
         $condition
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getDataPrototype')
             ->with(9)
             ->willReturn(['testColumn1' => null, 'testColumn2' => null])
@@ -49,51 +51,42 @@ class NotificationActionTest extends TestCase
 
         $componentManager = $this->createMock(ComponentManager::class);
         $componentManager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCondition')
             ->with('testCondition')
             ->willReturn($condition)
         ;
 
-        $action = new NotificationAction($componentManager, $connection);
+        $action = new NotificationAction($componentManager, $connection, $this->createStub(NotificationCenter::class));
 
-        $dc = $this->createMock(DataContainer::class);
+        $dc = $this->createStub(DataContainer::class);
         $dc
             ->method('__get')
             ->with('id')
             ->willReturn(9)
         ;
 
-        self::assertStringContainsString(
+        $this->assertStringContainsString(
             '##trigger_id##, ##trigger_title##, ##trigger_startTime##, ##data_testColumn1##, ##data_testColumn2##',
-            $action->onGetTokenList($dc)
+            $action->onGetTokenList($dc),
         );
     }
 
     public function testGetNotificationChoices(): void
     {
-        $data = [4 => 'firstTitle', 63 => 'secondTitle'];
-
-        $result = $this->createMock(Result::class);
-        $result
-            ->expects(self::once())
-            ->method('fetchAllKeyValue')
-            ->willReturn($data)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects(self::once())
-            ->method('executeQuery')
-            ->with("SELECT id, title FROM tl_nc_notification WHERE type='eblick_notification_action' ORDER BY title")
-            ->willReturn($result)
+        $notificationCenter = $this->createStub(NotificationCenter::class);
+        $notificationCenter
+            ->method('getNotificationsForNotificationType')
+            ->with(TriggerNotificationType::NAME)
+            ->willReturn([42 => 'notification'])
         ;
 
         $action = new NotificationAction(
-            $this->createMock(ComponentManager::class),
-            $connection
+            $this->createStub(ComponentManager::class),
+            $this->createStub(Connection::class),
+            $notificationCenter,
         );
 
-        self::assertEquals($data, $action->getNotificationChoices());
+        $this->assertSame([42 => 'notification'], $action->getNotificationChoices());
     }
 }

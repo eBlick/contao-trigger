@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Execution;
@@ -19,12 +19,12 @@ class ExecutionContextFactoryTest extends TestCase
 {
     public function testCreateExecutionContext(): void
     {
-        $factory = new ExecutionContextFactory($this->createMock(ExecutionLog::class));
+        $factory = new ExecutionContextFactory($this->createStub(ExecutionLog::class));
         $parameters = new \stdClass();
         $parameters->id = 4;
 
         $context = $factory->createExecutionContext($parameters, 1000);
 
-        self::assertInstanceOf(ExecutionContext::class, $context);
+        $this->assertInstanceOf(ExecutionContext::class, $context);
     }
 }

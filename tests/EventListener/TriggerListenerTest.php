@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\EventListener;
@@ -17,7 +17,6 @@ use EBlick\ContaoTrigger\EventListener\TriggerListener;
 use EBlick\ContaoTrigger\Execution\ExecutionContextFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class TriggerListenerTest extends TestCase
 {
@@ -25,25 +24,24 @@ class TriggerListenerTest extends TestCase
     {
         $result = $this->createMock(Result::class);
         $result
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetchAllAssociative')
             ->willReturn([])
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT * FROM tl_eblick_trigger WHERE enabled = 1 && error IS NULL')
             ->willReturn($result)
         ;
 
         $listener = new TriggerListener(
-            $this->createMock(ComponentManager::class),
+            $this->createStub(ComponentManager::class),
             $connection,
-            $this->createMock(LoggerInterface::class),
-            $this->createMock(ExecutionContextFactory::class),
-            $this->createMock(RequestStack::class)
+            $this->createStub(LoggerInterface::class),
+            $this->createStub(ExecutionContextFactory::class),
         );
 
         \define('TL_MODE', 'FE');

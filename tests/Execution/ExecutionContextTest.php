@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Execution;
@@ -22,7 +22,7 @@ class ExecutionContextTest extends TestCase
         new ExecutionContext(
             new \stdClass(),
             1234,
-            $this->createMock(ExecutionLog::class)
+            $this->createStub(ExecutionLog::class),
         );
     }
 
@@ -34,9 +34,9 @@ class ExecutionContextTest extends TestCase
         $obj = new ExecutionContext(
             $parameters,
             1234,
-            $this->createMock(ExecutionLog::class)
+            $this->createStub(ExecutionLog::class),
         );
-        self::assertInstanceOf(ExecutionContext::class, $obj);
+        $this->assertInstanceOf(ExecutionContext::class, $obj);
     }
 
     public function testGetParametersAndStartTime(): void
@@ -48,12 +48,12 @@ class ExecutionContextTest extends TestCase
         $context = new ExecutionContext(
             $parameters,
             12345,
-            $this->createMock(ExecutionLog::class)
+            $this->createStub(ExecutionLog::class),
         );
 
-        self::assertEquals($context->getParameters()->id, 12);
-        self::assertEquals($context->getParameters()->someValue, 'meow');
-        self::assertEquals($context->getStartTime(), 12345);
+        $this->assertSame(12, $context->getParameters()->id);
+        $this->assertSame('meow', $context->getParameters()->someValue);
+        $this->assertSame(12345, $context->getStartTime());
     }
 
     public function testGetLog(): void
@@ -64,14 +64,14 @@ class ExecutionContextTest extends TestCase
         $data = [2 => [['id' => 4, 'pid' => 5, 'tstamp' => 1234, 'origin' => 'tl_someTable']]];
         $log = $this->createMock(ExecutionLog::class);
         $log
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getLog')
             ->with(5, 'tl_someTable')
             ->willReturn($data)
         ;
 
         $context = new ExecutionContext($parameters, 15000, $log);
-        self::assertEquals($data, $context->getLog('tl_someTable'));
+        $this->assertSame($data, $context->getLog('tl_someTable'));
     }
 
     public function testAddLog(): void
@@ -81,7 +81,7 @@ class ExecutionContextTest extends TestCase
 
         $log = $this->createMock(ExecutionLog::class);
         $log
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('addLog')
             ->with(5, 61, 'tl_someTable', false)
         ;

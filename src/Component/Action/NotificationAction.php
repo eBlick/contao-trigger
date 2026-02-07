@@ -10,47 +10,35 @@ declare(strict_types=1);
 
 namespace EBlick\ContaoTrigger\Component\Action;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Model;
 use EBlick\ContaoTrigger\DataContainer\DataContainerComponentInterface;
 use EBlick\ContaoTrigger\DataContainer\Definition;
 use EBlick\ContaoTrigger\Execution\ExecutionContext;
 use EBlick\ContaoTrigger\Execution\ExecutionException;
-use NotificationCenter\Model\Notification;
+use Terminal42\NotificationCenterBundle\NotificationCenter;
 
 class NotificationAction implements ActionInterface, DataContainerComponentInterface
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly NotificationCenter|null $notificationCenter)
     {
     }
 
     public function fire(ExecutionContext $context, array $data): bool
     {
-        $this->framework->initialize();
-
-        /** @var Model $notificationModel */
-        $notificationModel = $this->framework->getAdapter(Notification::class);
-
-        if (!class_exists(Notification::class)) {
+        if (!$this->notificationCenter) {
             throw new ExecutionException('Notification Center not found! This extension is needed in order to run this trigger.');
         }
 
         $trigger = $context->getParameters();
 
-        /** @noinspection StaticInvocationViaThisInspection */
-        $objNotification = $notificationModel->findByPk($trigger->act_notification_entity);
+        if (null !== ($id = $trigger->act_notification_entity)) {
+            $tokens = [
+                'trigger_id' => $trigger->id,
+                'trigger_title' => $trigger->title,
+                'trigger_startTime' => $context->getStartTime(),
+                ...$this->prepareData($data),
+            ];
 
-        if (null !== $objNotification) {
-            $processed = array_merge(
-                [
-                    'trigger_id' => $trigger->id,
-                    'trigger_title' => $trigger->title,
-                    'trigger_startTime' => $context->getStartTime(),
-                ],
-                $this->prepareData($data)
-            );
-            /** @var Notification $objNotification */
-            $objNotification->send($processed);
+            $this->notificationCenter->sendNotification($id, $tokens);
 
             return true;
         }

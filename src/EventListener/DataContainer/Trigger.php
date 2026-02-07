@@ -13,6 +13,7 @@ namespace EBlick\ContaoTrigger\EventListener\DataContainer;
 use Contao\Backend;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Date;
@@ -26,8 +27,12 @@ use EBlick\ContaoTrigger\EventListener\TriggerListener;
 
 class Trigger
 {
-    public function __construct(private ComponentManager $componentManager, private Connection $connection, private TriggerListener $triggerSystem, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ComponentManager $componentManager,
+        private readonly Connection $connection,
+        private readonly TriggerListener $triggerSystem,
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
     /**
@@ -46,7 +51,7 @@ class Trigger
                 $this->importComponent(
                     'condition',
                     $conditionName,
-                    $condition->getDataContainerDefinition()
+                    $condition->getDataContainerDefinition(),
                 );
             }
         }
@@ -58,34 +63,39 @@ class Trigger
                 $this->importComponent(
                     'action',
                     $actionName,
-                    $action->getDataContainerDefinition()
+                    $action->getDataContainerDefinition(),
                 );
             }
         }
     }
 
+    #[AsCallback(table: 'tl_eblick_trigger', target: 'fields.error.input_field')]
     public function onGetError(DataContainer $dc): string
     {
-        if (!$dc->activeRecord->error) {
+        $error = $dc->getActiveRecord()['error'] ?? null;
+
+        if (!$error) {
             return '';
         }
 
-        return sprintf(
+        return \sprintf(
             '<div class="widget clr trigger-error"><h3>%s</h3><span><i>%s</i><br><br>%s</span></div>',
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['error'][0],
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['error'][1],
-            nl2br($dc->activeRecord->error)
+            nl2br($error),
         );
     }
 
+    #[AsCallback(table: 'tl_eblick_trigger', target: 'config.onsubmit')]
     public function onResetError(DataContainer $dc): void
     {
         $this->connection->executeQuery(
             'UPDATE tl_eblick_trigger SET error = NULL WHERE id =?',
-            [$dc->id]
+            [$dc->id],
         );
     }
 
+    #[AsCallback(table: 'tl_eblick_trigger', target: 'list.label.label')]
     public function onGenerateLabel(array $row): string
     {
         if ($row['error']) {
@@ -107,7 +117,7 @@ class Trigger
             ->fetchOne()
         ;
 
-        return sprintf(
+        return \sprintf(
             '<div class="trigger-list trigger-state-%s"><span class="title">%s</span>'.
             '<div class="icon"></div><div class="type">%s → %s (%s)<br><span>%s</span></div></div>',
             $state,
@@ -115,7 +125,7 @@ class Trigger
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['condition'][$row['condition_type']][0],
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['action'][$row['action_type']][0],
             $numRuns,
-            $lastRun
+            $lastRun,
         );
     }
 
@@ -126,12 +136,12 @@ class Trigger
             return '';
         }
 
-        return sprintf(
+        return \sprintf(
             '<a href="%s" title="%s"%s>%s</a> ',
             Backend::addToUrl($href.'&amp;id='.$row['id']),
             StringUtil::specialchars($title),
             $attributes,
-            Image::getHtml($icon, $label)
+            Image::getHtml($icon, $label),
         );
     }
 
@@ -151,11 +161,11 @@ class Trigger
     {
         $this->connection->executeQuery(
             'DELETE FROM tl_eblick_trigger_log WHERE pid =?',
-            [$dc->id]
+            [$dc->id],
         );
         $this->connection->executeQuery(
             'UPDATE tl_eblick_trigger SET lastDuration = 0, lastRun = 0 WHERE id =?',
-            [$dc->id]
+            [$dc->id],
         );
 
         $this->redirectBack();
