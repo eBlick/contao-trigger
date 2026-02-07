@@ -63,7 +63,7 @@ class TimeCondition implements ConditionInterface, DataContainerComponentInterfa
                     'mandatory' => true,
                     'rgxp' => 'datim',
                     'datepicker' => true,
-                    'tl_class' => 'w25 wizard',
+                    'tl_class' => 'w50 wizard',
                 ],
                 'sql' => 'INT(10) NULL',
             ],
