@@ -16,7 +16,6 @@ use EBlick\ContaoTrigger\Component\ComponentManager;
 use EBlick\ContaoTrigger\Execution\ExecutionContextFactory;
 use EBlick\ContaoTrigger\Execution\ExecutionException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -30,7 +29,6 @@ class TriggerListener
         private readonly Connection $connection,
         private readonly LoggerInterface $logger,
         private readonly ExecutionContextFactory $executionContextFactory,
-        private readonly RequestStack $requestStack,
     ) {
         $this->executionTimer = new Stopwatch();
     }

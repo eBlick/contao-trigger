@@ -72,7 +72,9 @@ class Trigger
     #[AsCallback(table: 'tl_eblick_trigger', target: 'fields.error.input_field')]
     public function onGetError(DataContainer $dc): string
     {
-        if (!$dc->activeRecord->error) {
+        $error = $dc->getActiveRecord()['error'] ?? null;
+
+        if (!$error) {
             return '';
         }
 
@@ -80,7 +82,7 @@ class Trigger
             '<div class="widget clr trigger-error"><h3>%s</h3><span><i>%s</i><br><br>%s</span></div>',
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['error'][0],
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['error'][1],
-            nl2br($dc->activeRecord->error),
+            nl2br($error),
         );
     }
 

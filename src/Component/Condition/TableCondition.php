@@ -203,8 +203,8 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
     private function getColumnNames(string $srcTable): array
     {
         return array_map(
-            static fn (Column $column): string => $column->getName(),
-            $this->schemaManager->listTableColumns($srcTable),
+            static fn (Column $column): string => $column->getObjectName()->getIdentifier()->getValue(),
+            $this->schemaManager->introspectTableColumnsByUnquotedName($srcTable),
         );
     }
 
@@ -215,7 +215,7 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
     {
         $logIds = !empty($log) ? array_keys($log) : [-1];
 
-        $query = 'SELECT * FROM '.$this->connection->quoteIdentifier($trigger->cnd_table_src).' WHERE TRUE';
+        $query = 'SELECT * FROM '.$this->connection->quoteSingleIdentifier($trigger->cnd_table_src).' WHERE TRUE';
         $params = [];
         $types = [];
 
@@ -238,7 +238,7 @@ class TableCondition implements ConditionInterface, DataContainerComponentInterf
             ) {
                 throw new ExecutionException(\sprintf('Invalid time offset "%s"!', $trigger->cnd_table_timeOffsetUnit));
             }
-            $timeColumn = $this->connection->quoteIdentifier(
+            $timeColumn = $this->connection->quoteSingleIdentifier(
                 $trigger->cnd_table_timeColumn,
             );
 

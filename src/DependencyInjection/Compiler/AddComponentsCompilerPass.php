@@ -19,7 +19,6 @@ class AddComponentsCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $container = $container;
         $componentManager = $container->getDefinition('eblick_contao_trigger.component.component_manager');
 
         $this->addToManager($container, $componentManager, 'eblick_contao_trigger.condition', 'addCondition');
