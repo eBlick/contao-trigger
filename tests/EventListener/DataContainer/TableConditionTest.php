@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\EventListener\DataContainer;
@@ -24,28 +24,28 @@ class TableConditionTest extends TestCase
     {
         $table1 = $this->createMock(Table::class);
         $table1
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getName')
             ->willReturn('tl_eblick_trigger')
         ;
 
         $table2 = $this->createMock(Table::class);
         $table2
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getName')
             ->willReturn('testTable2')
         ;
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('listTables')
             ->willReturn([$table1, $table2])
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
@@ -53,9 +53,9 @@ class TableConditionTest extends TestCase
         $condition = new TableCondition(
             $connection,
             $this->createMock(RowDataCompiler::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(ContaoFramework::class),
         );
 
-        self::assertEquals(['testTable2' => 'testTable2'], $condition->onGetTables());
+        $this->assertSame(['testTable2' => 'testTable2'], $condition->onGetTables());
     }
 }

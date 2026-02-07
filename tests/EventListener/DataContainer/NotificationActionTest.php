@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\EventListener\DataContainer;
@@ -26,14 +26,14 @@ class NotificationActionTest extends TestCase
 
         $result = $this->createMock(Result::class);
         $result
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetchOne')
             ->willReturn('testCondition')
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT condition_type FROM tl_eblick_trigger WHERE id = ?', [9])
             ->willReturn($result)
@@ -41,7 +41,7 @@ class NotificationActionTest extends TestCase
 
         $condition = $this->createMock(ConditionInterface::class);
         $condition
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getDataPrototype')
             ->with(9)
             ->willReturn(['testColumn1' => null, 'testColumn2' => null])
@@ -49,7 +49,7 @@ class NotificationActionTest extends TestCase
 
         $componentManager = $this->createMock(ComponentManager::class);
         $componentManager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getCondition')
             ->with('testCondition')
             ->willReturn($condition)
@@ -64,9 +64,9 @@ class NotificationActionTest extends TestCase
             ->willReturn(9)
         ;
 
-        self::assertStringContainsString(
+        $this->assertStringContainsString(
             '##trigger_id##, ##trigger_title##, ##trigger_startTime##, ##data_testColumn1##, ##data_testColumn2##',
-            $action->onGetTokenList($dc)
+            $action->onGetTokenList($dc),
         );
     }
 
@@ -76,14 +76,14 @@ class NotificationActionTest extends TestCase
 
         $result = $this->createMock(Result::class);
         $result
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetchAllKeyValue')
             ->willReturn($data)
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with("SELECT id, title FROM tl_nc_notification WHERE type='eblick_notification_action' ORDER BY title")
             ->willReturn($result)
@@ -91,9 +91,9 @@ class NotificationActionTest extends TestCase
 
         $action = new NotificationAction(
             $this->createMock(ComponentManager::class),
-            $connection
+            $connection,
         );
 
-        self::assertEquals($data, $action->getNotificationChoices());
+        $this->assertSame($data, $action->getNotificationChoices());
     }
 }

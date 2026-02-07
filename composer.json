@@ -55,7 +55,7 @@
   },
   "scripts": {
     "cs": [
-      "tools/ecs/vendor/bin/ecs check src tests --config tools/ecs/config/default.php --fi"
+      "tools/ecs/vendor/bin/ecs check src tests --config tools/ecs/config/default.php --fix"
     ],
     "tests": [
       "vendor/bin/phpunit --fail-on-phpunit-notice"

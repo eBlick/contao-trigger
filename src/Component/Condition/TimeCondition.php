@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Component\Condition;
@@ -17,7 +17,7 @@ use EBlick\ContaoTrigger\Execution\ExecutionContext;
 
 class TimeCondition implements ConditionInterface, DataContainerComponentInterface
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -33,14 +33,14 @@ class TimeCondition implements ConditionInterface, DataContainerComponentInterfa
         $execute = $this->connection
             ->executeQuery(
                 'SELECT cnd_time_executionTime <> 0 && NOW() >= FROM_UNIXTIME(cnd_time_executionTime) FROM tl_eblick_trigger WHERE id=?',
-                [$trigger->id]
+                [$trigger->id],
             )
             ->fetchOne()
         ;
 
         if ($execute) {
             $fireCallback(
-                ['selectedTime' => $trigger->cnd_time_executionTime]
+                ['selectedTime' => $trigger->cnd_time_executionTime],
             );
         }
     }

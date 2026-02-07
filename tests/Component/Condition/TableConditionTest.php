@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Component\Condition;
@@ -25,37 +25,37 @@ class TableConditionTest extends TestCase
     {
         $obj = new TableCondition(
             $this->createMock(Connection::class),
-            $this->createMock(RowDataCompiler::class)
+            $this->createMock(RowDataCompiler::class),
         );
 
         $definition = $obj->getDataContainerDefinition();
-        self::assertInstanceOf(Definition::class, $definition);
+        $this->assertInstanceOf(Definition::class, $definition);
 
-        self::assertCount(2, $definition->selectors);
-        self::assertCount(2, $definition->subPalettes);
-        self::assertCount(8, $definition->fields);
-        self::assertSame('cnd_table_src,cnd_table_timed,cnd_table_expression', $definition->palette);
+        $this->assertCount(2, $definition->selectors);
+        $this->assertCount(2, $definition->subPalettes);
+        $this->assertCount(8, $definition->fields);
+        $this->assertSame('cnd_table_src,cnd_table_timed,cnd_table_expression', $definition->palette);
     }
 
     public function testGetDataPrototype(): void
     {
         $column1 = $this->createMock(Column::class);
         $column1
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getName')
             ->willReturn('testCol1')
         ;
 
         $column2 = $this->createMock(Column::class);
         $column2
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getName')
             ->willReturn('testCol2')
         ;
 
         $column3 = $this->createMock(Column::class);
         $column3
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getName')
             ->willReturn('testCol3')
         ;
@@ -64,7 +64,7 @@ class TableConditionTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('listTableColumns')
             ->with('testTable')
             ->willReturn($columns)
@@ -78,7 +78,7 @@ class TableConditionTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT cnd_table_src FROM tl_eblick_trigger WHERE id = ?', [123])
             ->willReturn($result)
@@ -91,11 +91,11 @@ class TableConditionTest extends TestCase
 
         $condition = new TableCondition(
             $connection,
-            $this->createMock(RowDataCompiler::class)
+            $this->createMock(RowDataCompiler::class),
         );
 
         $result = $condition->getDataPrototype(123);
 
-        self::assertEquals($result, ['testCol1' => null, 'testCol2' => null, 'testCol3' => null]);
+        $this->assertSame(['testCol1' => null, 'testCol2' => null, 'testCol3' => null], $result);
     }
 }

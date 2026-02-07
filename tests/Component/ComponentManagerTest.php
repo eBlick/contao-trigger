@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Component;
@@ -24,7 +24,7 @@ class ComponentManagerTest extends TestCase
         $condition = $this->createMock(ConditionInterface::class);
         $manager->addCondition($condition, 'testCondition');
 
-        self::assertEquals($condition, $manager->getCondition('testCondition'));
+        $this->assertSame($condition, $manager->getCondition('testCondition'));
     }
 
     public function testAddAndGetAction(): void
@@ -34,7 +34,7 @@ class ComponentManagerTest extends TestCase
         $action = $this->createMock(ActionInterface::class);
         $manager->addAction($action, 'testAction');
 
-        self::assertEquals($action, $manager->getAction('testAction'));
+        $this->assertSame($action, $manager->getAction('testAction'));
     }
 
     public function testGetConditionNames(): void
@@ -46,7 +46,7 @@ class ComponentManagerTest extends TestCase
         $manager->addCondition($condition1, 'testCondition1');
         $manager->addCondition($condition2, 'testCondition2');
 
-        self::assertEquals(['testCondition1', 'testCondition2'], $manager->getConditionNames());
+        $this->assertSame(['testCondition1', 'testCondition2'], $manager->getConditionNames());
     }
 
     public function testGetActionNames(): void
@@ -58,6 +58,6 @@ class ComponentManagerTest extends TestCase
         $manager->addAction($action1, 'testAction1');
         $manager->addAction($action2, 'testAction2');
 
-        self::assertEquals(['testAction1', 'testAction2'], $manager->getActionNames());
+        $this->assertSame(['testAction1', 'testAction2'], $manager->getActionNames());
     }
 }

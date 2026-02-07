@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Component\Action;
@@ -31,7 +31,7 @@ class NotificationActionTest extends ContaoTestCase
         $context = new ExecutionContext(
             $parameters,
             159800,
-            $this->createMock(ExecutionLog::class)
+            $this->createMock(ExecutionLog::class),
         );
 
         $data = [];
@@ -43,7 +43,7 @@ class NotificationActionTest extends ContaoTestCase
         ];
 
         $action = $this->getMockedAction($preparedData, 24);
-        self::assertTrue($action->fire($context, $data));
+        $this->assertTrue($action->fire($context, $data));
     }
 
     public function testFireWithCustomData(): void
@@ -57,7 +57,7 @@ class NotificationActionTest extends ContaoTestCase
         $context = new ExecutionContext(
             $parameters,
             123456,
-            $this->createMock(ExecutionLog::class)
+            $this->createMock(ExecutionLog::class),
         );
 
         $data = [
@@ -74,7 +74,7 @@ class NotificationActionTest extends ContaoTestCase
         ];
 
         $action = $this->getMockedAction($preparedData, 24);
-        self::assertTrue($action->fire($context, $data));
+        $this->assertTrue($action->fire($context, $data));
     }
 
     public function testGetDataContainerDefinition(): void
@@ -82,28 +82,28 @@ class NotificationActionTest extends ContaoTestCase
         $obj = new NotificationAction($this->createMock(ContaoFramework::class));
 
         $definition = $obj->getDataContainerDefinition();
-        self::assertInstanceOf(Definition::class, $definition);
+        $this->assertInstanceOf(Definition::class, $definition);
 
-        self::assertCount(0, $definition->selectors);
-        self::assertCount(0, $definition->subPalettes);
-        self::assertCount(2, $definition->fields);
-        self::assertSame('act_notification_entity,act_notification_tokenList', $definition->palette);
+        $this->assertCount(0, $definition->selectors);
+        $this->assertCount(0, $definition->subPalettes);
+        $this->assertCount(2, $definition->fields);
+        $this->assertSame('act_notification_entity,act_notification_tokenList', $definition->palette);
     }
 
     private function getMockedAction($preparedData, $notificationId): NotificationAction
     {
         $notification = $this->mockAdapter(['send']);
         $notification
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('send')
             ->with($preparedData)
             ->willReturn(true)
         ;
 
-        $notificationAdapter = $this->mockAdapter(['findByPk']);
+        $notificationAdapter = $this->mockAdapter(['findById']);
         $notificationAdapter
-            ->expects(self::once())
-            ->method('findByPk')
+            ->expects($this->once())
+            ->method('findById')
             ->with($notificationId)
             ->willReturn($notification)
         ;

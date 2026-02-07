@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\EventListener;
@@ -25,8 +25,13 @@ class TriggerListener
 {
     private Stopwatch $executionTimer;
 
-    public function __construct(private ComponentManager $componentManager, private Connection $connection, private LoggerInterface $logger, private ExecutionContextFactory $executionContextFactory, private RequestStack $requestStack)
-    {
+    public function __construct(
+        private readonly ComponentManager $componentManager,
+        private readonly Connection $connection,
+        private readonly LoggerInterface $logger,
+        private readonly ExecutionContextFactory $executionContextFactory,
+        private readonly RequestStack $requestStack,
+    ) {
         $this->executionTimer = new Stopwatch();
     }
 
@@ -38,7 +43,7 @@ class TriggerListener
         $triggers = $this->connection
             ->executeQuery(
                 'SELECT * FROM tl_eblick_trigger '.
-                'WHERE enabled = 1 && error IS NULL'
+                'WHERE enabled = 1 && error IS NULL',
             )
             ->fetchAllAssociative()
         ;
@@ -71,7 +76,7 @@ class TriggerListener
         $trigger = $this->connection
             ->executeQuery(
                 'SELECT * FROM tl_eblick_trigger WHERE id = ?',
-                [$triggerId]
+                [$triggerId],
             )
             ->fetchAssociative()
         ;
@@ -113,18 +118,18 @@ class TriggerListener
         } catch (\Exception $e) {
             $this->connection->executeQuery(
                 'UPDATE tl_eblick_trigger SET error = ? WHERE id = ?',
-                [$e->getMessage(), $trigger->id]
+                [$e->getMessage(), $trigger->id],
             );
 
             if ($e instanceof ExecutionException) {
                 $this->logger->warning(
-                    sprintf('An error occurred during execution of trigger %s.', $trigger->id),
-                    ['exception' => $e, 'contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
+                    \sprintf('An error occurred during execution of trigger %s.', $trigger->id),
+                    ['exception' => $e, 'contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)],
                 );
             } else {
                 $this->logger->critical(
-                    sprintf('An unexpected exception occurred during execution of trigger %s.', $trigger->id),
-                    ['exception' => $e, 'contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
+                    \sprintf('An unexpected exception occurred during execution of trigger %s.', $trigger->id),
+                    ['exception' => $e, 'contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)],
                 );
             }
         }
@@ -133,7 +138,7 @@ class TriggerListener
         $stopwatchEvent = $this->executionTimer->stop('trigger-'.$trigger->id);
         $this->connection->executeQuery(
             'UPDATE tl_eblick_trigger SET lastRun = ?, lastDuration = ? WHERE id = ?',
-            [$executionContext->getStartTime(), (int) $stopwatchEvent->getDuration(), $trigger->id]
+            [$executionContext->getStartTime(), (int) $stopwatchEvent->getDuration(), $trigger->id],
         );
     }
 
@@ -146,7 +151,7 @@ class TriggerListener
         return array_filter(
             $data,
             static fn ($v) => \array_key_exists($v, $dataPrototype),
-            ARRAY_FILTER_USE_KEY
+            ARRAY_FILTER_USE_KEY,
         );
     }
 }

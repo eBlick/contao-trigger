@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\DependencyInjection\Compiler;
@@ -23,36 +23,36 @@ class AddComponentsCompilerPassTest extends TestCase
     {
         $componentManager = $this->createMock(Definition::class);
         $componentManager
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('addMethodCall')
             ->withConsecutive(
                 ['addCondition', [new Reference('testTag1'), 'testAlias1']],
-                ['addAction', [new Reference('testTag2'), 'testAlias2']]
+                ['addAction', [new Reference('testTag2'), 'testAlias2']],
             )
         ;
 
         $container = $this->createMock(ContainerBuilder::class);
         $container
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getDefinition')
             ->with('eblick_contao_trigger.component.component_manager')
             ->willReturn($componentManager)
         ;
 
         $container
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('findTaggedServiceIds')
             ->withConsecutive(['eblick_contao_trigger.condition'], ['eblick_contao_trigger.action'])
             ->willReturnOnConsecutiveCalls(
                 ['testTag1' => [['alias' => 'testAlias1']]],
-                ['testTag2' => [['alias' => 'testAlias2']]]
+                ['testTag2' => [['alias' => 'testAlias2']]],
             )
         ;
 
         $compilerPass = new AddComponentsCompilerPass();
         $compilerPass->process($container);
 
-        self::assertTrue(method_exists(ComponentManager::class, 'addCondition'));
-        self::assertTrue(method_exists(ComponentManager::class, 'addAction'));
+        $this->assertTrue(method_exists(ComponentManager::class, 'addCondition'));
+        $this->assertTrue(method_exists(ComponentManager::class, 'addAction'));
     }
 }

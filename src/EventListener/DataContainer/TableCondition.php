@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\EventListener\DataContainer;
@@ -28,8 +28,11 @@ class TableCondition
 {
     private AbstractSchemaManager $schemaManager;
 
-    public function __construct(private Connection $connection, private RowDataCompiler $rowDataCompiler, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly RowDataCompiler $rowDataCompiler,
+        private readonly ContaoFramework $framework,
+    ) {
         $this->schemaManager = $this->connection->createSchemaManager();
     }
 
@@ -40,7 +43,7 @@ class TableCondition
     {
         $tables = array_map(
             static fn (Table $table): string => $table->getName(),
-            $this->schemaManager->listTables()
+            $this->schemaManager->listTables(),
         );
 
         // exclude tables
@@ -61,7 +64,7 @@ class TableCondition
 
         $tables = array_diff(
             array_values($tables),
-            $excludedTables
+            $excludedTables,
         );
 
         // key equals value
@@ -142,9 +145,9 @@ class TableCondition
             return $field;
         }
         $label = \is_array(
-            $GLOBALS['TL_LANG'][$table][$field]
+            $GLOBALS['TL_LANG'][$table][$field],
         ) ? $GLOBALS['TL_LANG'][$table][$field][0] : $GLOBALS['TL_LANG'][$table][$field];
 
-        return sprintf('%s (%s)', $label, $field);
+        return \sprintf('%s (%s)', $label, $field);
     }
 }

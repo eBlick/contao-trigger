@@ -22,8 +22,7 @@ class NotificationAction
         private readonly ComponentManager $componentManager,
         private readonly Connection $connection,
         private readonly NotificationCenter|null $notificationCenter,
-    )
-    {
+    ) {
     }
 
     public function onGetTokenList(DataContainer $dc): string
@@ -42,15 +41,15 @@ class NotificationAction
                 ', ',
                 array_map(
                     static fn ($v) => '##data_'.$v.'##',
-                    array_keys($condition->getDataPrototype((int) $dc->id))
-                )
+                    array_keys($condition->getDataPrototype((int) $dc->id)),
+                ),
             );
         }
 
-        return sprintf(
+        return \sprintf(
             '<div class="widget clr"><h3>%s</h3><span style="display:inline-block; margin-top: 5px; color: #999;">%s</span></div>',
             $GLOBALS['TL_LANG']['tl_eblick_trigger']['action_notification_tokens'],
-            $tokens
+            $tokens,
         );
     }
 

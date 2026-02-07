@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\Execution;
@@ -21,7 +21,7 @@ class ExecutionLogTest extends TestCase
     {
         $result = $this->createMock(Result::class);
         $result
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetchAllAssociative')
             ->willReturn([
                 ['id' => 1, 'pid' => 12, 'tstamp' => 1234, 'origin' => 'tl_someTable', 'originId' => 4, 'simulated' => ''],
@@ -31,7 +31,7 @@ class ExecutionLogTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT * FROM tl_eblick_trigger_log WHERE pid=?', [12])
             ->willReturn($result)
@@ -44,14 +44,14 @@ class ExecutionLogTest extends TestCase
             7 => ['id' => 2, 'pid' => 12, 'tstamp' => 2345, 'origin' => 'tl_otherTable', 'originId' => 7, 'simulated' => ''],
         ];
 
-        self::assertEquals($expected, $log->getLog(12));
+        $this->assertSame($expected, $log->getLog(12));
     }
 
     public function testGetLogWithOrigin(): void
     {
         $result = $this->createMock(Result::class);
         $result
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('fetchAllAssociative')
             ->willReturn([
                 ['id' => 1, 'pid' => 12, 'tstamp' => 1234, 'origin' => 'tl_someTable', 'originId' => 4, 'simulated' => ''],
@@ -61,7 +61,7 @@ class ExecutionLogTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT * FROM tl_eblick_trigger_log WHERE pid=? AND origin =?', [12, 'tl_someTable'])
             ->willReturn($result)
@@ -74,7 +74,7 @@ class ExecutionLogTest extends TestCase
             7 => ['id' => 2, 'pid' => 12, 'tstamp' => 2345, 'origin' => 'tl_someTable', 'originId' => 7, 'simulated' => ''],
         ];
 
-        self::assertEquals($expected, $log->getLog(12, 'tl_someTable'));
+        $this->assertSame($expected, $log->getLog(12, 'tl_someTable'));
     }
 
     public function testAddLogWithoutOriginFails(): void
@@ -89,11 +89,11 @@ class ExecutionLogTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('executeQuery')
             ->with(
                 'INSERT INTO tl_eblick_trigger_log SET pid=?, tstamp=?, originId=?, origin=?, simulated=?',
-                self::anything()
+                $this->anything(),
             )
         ;
 

@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /*
- * @copyright eBlick Medienberatung
+ * @copyright LUMAS Consulting
  * @license   LGPL-3.0+
- * @link      https://github.com/eBlick/contao-trigger
+ * @link      https://github.com/lumas-consulting/contao-trigger
  */
 
 namespace EBlick\ContaoTrigger\Test\ExpressionLanguage;
@@ -25,8 +25,8 @@ class RowDataCompilerTest extends TestCase
 
         $closure = $compiler->compileRowExpression($expression, $columnNames);
 
-        self::assertFalse($closure(['a' => 1, 'b' => 2, 'c' => 3])); // 1 + 2 == 5 - 3
-        self::assertTrue($closure(['a' => 1, 'b' => 2, 'c' => 2])); // 1 + 2 == 5 - 2
+        $this->assertFalse($closure(['a' => 1, 'b' => 2, 'c' => 3])); // 1 + 2 == 5 - 3
+        $this->assertTrue($closure(['a' => 1, 'b' => 2, 'c' => 2])); // 1 + 2 == 5 - 2
     }
 
     public function testCompileRowExpressionWithSyntaxError(): void

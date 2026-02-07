@@ -1,11 +1,17 @@
 <?php
+
 declare(strict_types=1);
+
+/*
+ * @copyright LUMAS Consulting
+ * @license   LGPL-3.0+
+ * @link      https://github.com/lumas-consulting/contao-trigger
+ */
 
 namespace EBlick\ContaoTrigger\NotificationCenter;
 
 use Terminal42\NotificationCenterBundle\NotificationType\NotificationTypeInterface;
 use Terminal42\NotificationCenterBundle\Token\Definition\AnythingTokenDefinition;
-use Terminal42\NotificationCenterBundle\Token\Definition\EmailTokenDefinition;
 use Terminal42\NotificationCenterBundle\Token\Definition\Factory\TokenDefinitionFactoryInterface;
 use Terminal42\NotificationCenterBundle\Token\Definition\TextTokenDefinition;
 

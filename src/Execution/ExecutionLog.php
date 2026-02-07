@@ -14,11 +14,11 @@ use Doctrine\DBAL\Connection;
 
 class ExecutionLog
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
-    public function getLog(int $triggerId, string $origin = null): array
+    public function getLog(int $triggerId, string|null $origin = null): array
     {
         $query = 'SELECT * FROM tl_eblick_trigger_log WHERE pid=?';
         $params = [$triggerId];
@@ -40,13 +40,13 @@ class ExecutionLog
     public function addLog(int $triggerId, int $originId, string $origin, bool $simulated): void
     {
         if (!$origin) {
-            throw new \InvalidArgumentException(sprintf('Origin can\'t be empty in trigger %s!', $triggerId));
+            throw new \InvalidArgumentException(\sprintf('Origin can\'t be empty in trigger %s!', $triggerId));
         }
 
         $this->connection
             ->executeQuery(
                 'INSERT INTO tl_eblick_trigger_log SET pid=?, tstamp=?, originId=?, origin=?, simulated=?',
-                [$triggerId, time(), $originId, $origin, $simulated]
+                [$triggerId, time(), $originId, $origin, $simulated],
             )
         ;
     }
