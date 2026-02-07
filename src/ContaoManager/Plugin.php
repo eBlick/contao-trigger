@@ -15,6 +15,7 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use EBlick\ContaoTrigger\EBlickContaoTriggerBundle;
+use Terminal42\NotificationCenterBundle\Terminal42NotificationCenterBundle;
 
 class Plugin implements BundlePluginInterface
 {
@@ -25,7 +26,7 @@ class Plugin implements BundlePluginInterface
                 ->setLoadAfter(
                     [
                         ContaoCoreBundle::class,
-                        'notification-center',
+                        Terminal42NotificationCenterBundle::class,
                     ],
                 ),
         ];
